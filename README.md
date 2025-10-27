@@ -1,5 +1,7 @@
 # Team CoreX Assignment - Unity Project
 
+----
+
 This is a Unity project for the Team CoreX Assignment.
 
 ## About
