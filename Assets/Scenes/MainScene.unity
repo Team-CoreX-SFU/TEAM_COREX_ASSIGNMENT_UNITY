@@ -7141,6 +7141,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2045146564}
   - component: {fileID: 2045146565}
+  - component: {fileID: 2045146566}
   m_Layer: 0
   m_Name: Spot Light
   m_TagString: Untagged
@@ -7225,6 +7226,22 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &2045146566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2045146563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd613ba254d3a4c4b8fd4d5c1ccd7629, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minOnTime: 5
+  maxOnTime: 10
+  offTime: 3
+  maxInitialJitter: 0.5
 --- !u!1001 &2048038181
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7435,7 +7452,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2086545113477541647, guid: 14a18e4071a80524fb1b06971beae1f6, type: 3}
       propertyPath: m_Name
-      value: rope_handcuff
+      value: RopeHandcuff
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
