@@ -598,6 +598,7 @@ GameObject:
   - component: {fileID: 58566362}
   - component: {fileID: 58566361}
   - component: {fileID: 58566360}
+  - component: {fileID: 58566365}
   m_Layer: 0
   m_Name: Locomotion System
   m_TagString: Untagged
@@ -612,7 +613,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 58566359}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0bf296fc962d7184ab14ad1841598d5f, type: 3}
   m_Name: 
@@ -733,6 +734,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &58566365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 58566359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72723599834be4f888078c70a4146216, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_System: {fileID: 58566363}
+  m_MoveSpeed: 1
+  m_EnableStrafe: 1
+  m_EnableFly: 0
+  m_UseGravity: 1
+  m_GravityApplicationMode: 1
+  m_ForwardSource: {fileID: 30270368}
 --- !u!1 &106920774
 GameObject:
   m_ObjectHideFlags: 0
@@ -1614,7 +1634,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 821331269826409447, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
       insertIndex: 4
       addedObject: {fileID: 360165286}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1761226895}
   m_SourcePrefab: {fileID: 100100000, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
 --- !u!1 &282000298
 GameObject:
@@ -6434,6 +6457,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 144.988, y: -30, z: 0}
+--- !u!1 &1761226894 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
+  m_PrefabInstance: {fileID: 257782495}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &1761226895
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1761226894}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
 --- !u!1001 &1765897508
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7322,6 +7372,7 @@ GameObject:
   - component: {fileID: 2062876237}
   - component: {fileID: 2062876236}
   - component: {fileID: 2062876235}
+  - component: {fileID: 2062876239}
   - component: {fileID: 2062876238}
   m_Layer: 0
   m_Name: XR Origin (XR Rig)
@@ -7370,15 +7421,15 @@ Transform:
   m_GameObject: {fileID: 2062876234}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -1, z: 0, w: 0}
-  m_LocalPosition: {x: 52.571, y: 3.618, z: -121.155}
+  m_LocalPosition: {x: 52.571, y: 3.794, z: -121.155}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 616457058}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
---- !u!65 &2062876238
-BoxCollider:
+--- !u!143 &2062876238
+CharacterController:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -7396,8 +7447,28 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Height: 2
+  m_Radius: 0.2
+  m_SlopeLimit: 90
+  m_StepOffset: 0.2
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2062876239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2062876234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af6bf904e410ee8479f9093d8830d1f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_LocomotionProvider: {fileID: 0}
+  m_MinHeight: 0
+  m_MaxHeight: Infinity
 --- !u!1001 &7257124374341196544
 PrefabInstance:
   m_ObjectHideFlags: 0
