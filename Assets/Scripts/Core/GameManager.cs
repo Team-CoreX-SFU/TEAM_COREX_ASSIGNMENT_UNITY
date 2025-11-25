@@ -17,7 +17,6 @@ public class GameManager : MonoBehaviour
     [Tooltip("Button that triggers save game")]
     public Button saveFileButton;
 
-    [Header("Game State")]
     public enum GameState
     {
         Playing,
@@ -26,6 +25,9 @@ public class GameManager : MonoBehaviour
         Victory,
         InMenu
     }
+
+    [Header("Game State")]
+    public GameState startingState = GameState.Playing;
 
     public GameState CurrentState { get; private set; }
 
@@ -43,7 +45,7 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            CurrentState = GameState.Playing;
+            CurrentState = startingState;
         }
         else
         {
