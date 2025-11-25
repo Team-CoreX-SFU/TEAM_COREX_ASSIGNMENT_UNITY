@@ -1,8 +1,9 @@
 # Project Review - Team CoreX Assignment Unity
 
-**Review Date:** 2024
+**Review Date:** December 2024
 **Unity Version:** 2022.3.35f1
 **Project Type:** VR Escape Room Game
+**Total Scripts Reviewed:** 12 C# scripts
 
 ---
 
@@ -140,14 +141,17 @@ public class HandTriggerZone : MonoBehaviour
 **Location:** Various scripts
 
 **Issue:** Some potential null reference exceptions:
-- `FlashlightInput.cs`: No null check for `flashlight` before calling methods
-- `BatteryPickup.cs`: No null check before calling `flashlight.InsertBattery()`
-- `HandMovementToggleInspector.cs`: Reflection-based property access could fail
+- `FlashlightInput.cs:16`: No null check for `flashlight` before calling `ToggleFlashlight()`
+- `BatteryPickup.cs:28-30`: Has null check but could use null-conditional operator
+- `HandMovementToggleInspector.cs:27-28`: Reflection-based property access could fail with `NullReferenceException` if property doesn't exist
+- `FlashlightController.cs:14`: No null check for `flashlightLight` before accessing `enabled` property
+- `HintCanvasTriggerSingle.cs:21,31`: No null check for `hintCanvas` before calling coroutine
 
 **Recommendation:**
-- Add defensive null checks
-- Use null-conditional operators where appropriate
-- Add validation in `Awake()` or `Start()`
+- Add defensive null checks with early returns
+- Use null-conditional operators where appropriate (`flashlight?.ToggleFlashlight()`)
+- Add validation in `Awake()` or `Start()` with error messages
+- Wrap reflection calls in try-catch blocks
 
 #### 7. **Inconsistent Naming Conventions**
 **Location:** Multiple files
@@ -155,12 +159,14 @@ public class HandTriggerZone : MonoBehaviour
 **Issues:**
 - `GlichedLight.cs` - typo in filename (should be "Glitched")
 - Mixed use of public fields vs properties
-- Some private fields use underscore prefix (`_light`, `_routine`) while others don't
+- Some private fields use underscore prefix (`_light`, `_routine` in `GlichedLight.cs`) while others don't (`grabInteractable` in `BatteryPickup.cs`)
+- Inconsistent naming: `FlashlightGrabTracker` vs `FlashlightInput` vs `FlashlightController` - all related but different naming patterns
 
 **Recommendation:**
-- Fix typo: Rename `GlichedLight.cs` to `GlitchedLight.cs`
-- Establish and follow consistent naming conventions
-- Use properties for public accessors
+- Fix typo: Rename `GlichedLight.cs` to `GlitchedLight.cs` (and update class name)
+- Establish and follow consistent naming conventions (decide on underscore prefix for private fields)
+- Use properties for public accessors with proper getters/setters
+- Consider consistent naming pattern for related scripts (e.g., `Flashlight*` prefix)
 
 ---
 
@@ -180,8 +186,11 @@ public class HandTriggerZone : MonoBehaviour
 - No save/load system
 - No settings menu
 - No pause functionality
-- Limited audio implementation (only rope cutting sound)
+- Limited audio implementation (only rope cutting sound in `HandTriggerZone`)
 - No visual feedback for player damage
+- No battery level/charge system for flashlight (battery is binary: has/doesn't have)
+- No radio functionality (folder name suggests it was planned: "Flashlight, Radio and Battery Script")
+- No escape/win condition system
 
 #### 11. **Documentation in Code**
 - Some scripts lack XML documentation comments
@@ -327,7 +336,17 @@ public class GameManager : MonoBehaviour
 ### Scenes
 - `MainScene.unity` - Main game scene
 - `GameManagerScene.unity` - Appears to be a new scene (untracked in git)
-- Multiple NavMesh assets for multi-floor navigation
+- Multiple NavMesh assets for multi-floor navigation (Basement, First Floor, Ground Floor)
+
+### Script Inventory
+**Total:** 12 C# scripts
+- **AI System:** `KidnapperAI.cs`, `KidnapperSetupHelper.cs`
+- **Flashlight System:** `FlashlightController.cs`, `FlashlightGrabTracker.cs`, `FlashlightInput.cs`, `BatteryPickup.cs`
+- **Light System:** `ToggleLight.cs`, `GlichedLight.cs` (typo)
+- **Interaction:** `HandTriggerZone.cs` (in file `MetalPlateTriggerZone.cs` - name mismatch)
+- **UI/Hints:** `HintCanvasTriggerSingle.cs`
+- **Player:** `HandMovementToggleInspector.cs`
+- **Placeholder:** `CustomInputController.cs` (empty `ActionController` class)
 
 ### Git Status
 - Several untracked files (materials, new scene)
@@ -348,6 +367,91 @@ With these improvements, the project will be production-ready. The team has done
 
 ---
 
-**Reviewed by:** AI Code Reviewer
-**Date:** 2024
+---
+
+## 📋 Detailed Code Analysis
+
+### Script-by-Script Review
+
+#### `KidnapperAI.cs` (613 lines)
+**Status:** ✅ Functional but needs optimization
+- **Strengths:** Comprehensive state machine, good NavMesh integration, helpful gizmos
+- **Issues:**
+  - Excessive debug logging (lines 206, 252, 568)
+  - Magic numbers (2f, 3f, 1.5f multipliers)
+  - Missing GameManager reference (line 521)
+  - Player detection runs every frame (could use coroutine with interval)
+- **Recommendation:** Optimize update frequency, add conditional compilation for debug logs
+
+#### `FlashlightController.cs` (30 lines)
+**Status:** ✅ Functional but minimal
+- **Strengths:** Simple, clear logic
+- **Issues:**
+  - No null check for `flashlightLight` in `Start()`
+  - Binary battery system (no charge/level)
+- **Recommendation:** Add null checks, consider battery level system
+
+#### `BatteryPickup.cs` (46 lines)
+**Status:** ✅ Functional
+- **Strengths:** Good use of XR events, proper cleanup
+- **Issues:**
+  - Could use null-conditional operator
+  - No validation that flashlight reference is assigned
+- **Recommendation:** Add validation in `Awake()`
+
+#### `FlashlightInput.cs` (19 lines)
+**Status:** ⚠️ Needs null check
+- **Strengths:** Clean Input System integration
+- **Issues:** No null check before calling `flashlight.ToggleFlashlight()`
+- **Recommendation:** Add null check or use null-conditional operator
+
+#### `FlashlightGrabTracker.cs` (47 lines)
+**Status:** ✅ Well-implemented
+- **Strengths:** Proper event handling, cleanup, initialization coroutine
+- **No major issues found**
+
+#### `HandTriggerZone.cs` (in `MetalPlateTriggerZone.cs`)
+**Status:** ⚠️ File/class name mismatch
+- **Strengths:** Good coroutine usage, audio integration
+- **Issues:** File name doesn't match class name
+- **Recommendation:** Rename file to match class
+
+#### `GlichedLight.cs` (110 lines)
+**Status:** ✅ Functional but has typo
+- **Strengths:** Well-documented, good coroutine management, defensive coding
+- **Issues:** Typo in filename and class name ("Gliched" should be "Glitched")
+- **Recommendation:** Rename file and class
+
+#### `ToggleLight.cs` (85 lines)
+**Status:** ✅ Well-implemented
+- **Strengths:** Good documentation, flexible design, defensive null checks
+- **No major issues found**
+
+#### `HintCanvasTriggerSingle.cs` (50 lines)
+**Status:** ⚠️ Needs null check
+- **Strengths:** Smooth fade coroutine, clean trigger system
+- **Issues:** No null check for `hintCanvas` before use
+- **Recommendation:** Add null validation
+
+#### `HandMovementToggleInspector.cs` (55 lines)
+**Status:** ⚠️ Reflection could fail
+- **Strengths:** Useful for VR development workflow
+- **Issues:** Reflection-based property access could throw exceptions
+- **Recommendation:** Add try-catch or validate property existence
+
+#### `KidnapperSetupHelper.cs` (154 lines)
+**Status:** ✅ Excellent helper tool
+- **Strengths:** Very useful for setup, good documentation, context menu integration
+- **No major issues found**
+
+#### `CustomInputController.cs` (19 lines)
+**Status:** 🔴 Dead code
+- **Issues:** Empty `ActionController` class with no functionality
+- **Recommendation:** Delete or implement
+
+---
+
+**Reviewed by:** AI Code Reviewer (Auto)
+**Date:** December 2024
+**Review Type:** Comprehensive Code Review
 
