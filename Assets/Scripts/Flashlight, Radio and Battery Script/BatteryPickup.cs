@@ -4,7 +4,9 @@ using UnityEngine.XR.Interaction.Toolkit;
 [RequireComponent(typeof(XRGrabInteractable))]
 public class BatteryPickup : MonoBehaviour
 {
+    [Header("Assignments")]
     public FlashlightController flashlight; // assign the player's flashlight
+    public RadioController[] radios; // optional radios that this battery should power
     public float disappearDelay = 0.1f; // optional small delay before disappearing
 
     private XRGrabInteractable grabInteractable;
@@ -28,6 +30,17 @@ public class BatteryPickup : MonoBehaviour
         if (flashlight != null)
         {
             flashlight.InsertBattery();
+        }
+
+        if (radios != null)
+        {
+            foreach (var radio in radios)
+            {
+                if (radio != null)
+                {
+                    radio.InsertBattery();
+                }
+            }
         }
 
         // Disable battery object so it disappears
