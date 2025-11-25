@@ -41,7 +41,7 @@ public class KidnapperAI : MonoBehaviour
         Attacking,
         Searching
     }
-    
+
     [Header("State")]
     public AIState currentState = AIState.Patrolling;
 
@@ -91,7 +91,7 @@ public class KidnapperAI : MonoBehaviour
         agent.height = 2f;
         agent.radius = 0.5f;
         agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
-        
+
         // Multi-floor navigation settings
         agent.baseOffset = 0f; // Adjust if agent is floating or sinking
         agent.acceleration = 12f; // Increased for smoother acceleration
@@ -99,16 +99,16 @@ public class KidnapperAI : MonoBehaviour
         agent.autoBraking = false; // Disable auto-braking for smoother movement
         agent.autoRepath = true; // Automatically recalculate path if blocked
         agent.autoTraverseOffMeshLink = true; // Automatically use off-mesh links (jumps, etc.)
-        
+
         // Make sure agent is enabled
         agent.enabled = true;
-        
+
         // Warn if agent is not on NavMesh
         if (!agent.isOnNavMesh)
         {
             Debug.LogWarning($"Kidnapper NavMesh Agent is NOT on NavMesh! Position: {transform.position}. Move the kidnapper to a blue NavMesh area.");
         }
-        
+
         // Warn about obstacles
         Debug.Log("KidnapperAI: Make sure all obstacles (furniture, walls) are marked as 'Navigation Static' and NavMesh is re-baked, or the kidnapper will walk through them!");
 
@@ -128,7 +128,7 @@ public class KidnapperAI : MonoBehaviour
         {
             Debug.LogWarning("No valid patrol points assigned!");
         }
-        
+
         // Debug log to verify setup
         Debug.Log($"KidnapperAI initialized. Patrol points: {patrolPoints.Length}, Player found: {player != null}, Agent enabled: {agent.enabled}, Agent on NavMesh: {agent.isOnNavMesh}");
     }
@@ -209,30 +209,30 @@ public class KidnapperAI : MonoBehaviour
             // Check FOV - allow detection from all angles if enabled, or if very close
             bool inFOV = detectFromAllAngles || angleToPlayer <= fieldOfView / 2f;
             bool veryClose = distanceToPlayer <= attackRange * 2f; // Can detect from behind if very close
-            
+
             if (inFOV || veryClose)
             {
                 // If player is very close, detect them even through walls (for gameplay)
                 bool canDetectThroughWalls = distanceToPlayer <= attackRange * 3f; // Within 6 units, detect through walls
-                
+
                 // Check line of sight - use a layer mask that includes everything
                 RaycastHit hit;
                 Vector3 rayStart = transform.position + Vector3.up * 1.5f; // Eye level
                 Vector3 rayDirection = directionToPlayer;
-                
+
                 // Cast ray to check line of sight - use all layers
                 int layerMask = ~0; // All layers
                 bool hasLineOfSight = false;
-                
+
                 if (Physics.Raycast(rayStart, rayDirection, out hit, detectionRange, layerMask))
                 {
                     // Check if we hit the player or something with Player tag
-                    bool hitPlayer = hit.collider.CompareTag("Player") || 
-                                    hit.collider.transform == player || 
+                    bool hitPlayer = hit.collider.CompareTag("Player") ||
+                                    hit.collider.transform == player ||
                                     hit.collider.transform.IsChildOf(player) ||
                                     (hit.collider.transform.parent != null && hit.collider.transform.parent.CompareTag("Player")) ||
                                     hit.collider.transform.root.CompareTag("Player");
-                    
+
                     if (hitPlayer)
                     {
                         hasLineOfSight = true;
@@ -266,7 +266,7 @@ public class KidnapperAI : MonoBehaviour
                         Debug.Log($"Raycast didn't hit anything. Distance: {distanceToPlayer}, Range: {detectionRange}");
                     }
                 }
-                
+
                 // If we have line of sight (or can detect through walls), detect the player
                 if (hasLineOfSight)
                 {
@@ -338,12 +338,12 @@ public class KidnapperAI : MonoBehaviour
     {
         isWaitingAtPatrolPoint = true;
         agent.isStopped = true;
-        
+
         yield return new WaitForSeconds(patrolWaitTime);
 
         // Move to next patrol point
         currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
-        
+
         // Make sure patrol point is valid
         if (patrolPoints[currentPatrolIndex] != null)
         {
@@ -355,7 +355,7 @@ public class KidnapperAI : MonoBehaviour
         {
             Debug.LogWarning($"Patrol point {currentPatrolIndex} is null!");
         }
-        
+
         isWaitingAtPatrolPoint = false;
     }
 
@@ -370,19 +370,19 @@ public class KidnapperAI : MonoBehaviour
             // Update path more frequently for smoother following
             float timeSinceLastUpdate = Time.time - lastPathUpdateTime;
             bool shouldUpdatePath = timeSinceLastUpdate >= pathUpdateInterval;
-            
+
             // Also update if player moved significantly
             float distanceToLastDestination = Vector3.Distance(player.position, lastDestination);
             bool playerMovedSignificantly = distanceToLastDestination > 1f;
-            
+
             if (shouldUpdatePath || playerMovedSignificantly || !agent.hasPath)
             {
                 // Check if player position is on NavMesh
                 UnityEngine.AI.NavMeshHit hit;
                 bool playerOnNavMesh = UnityEngine.AI.NavMesh.SamplePosition(player.position, out hit, 5f, UnityEngine.AI.NavMesh.AllAreas);
-                
+
                 Vector3 targetPosition;
-                
+
                 if (playerOnNavMesh)
                 {
                     // Player is on NavMesh, set destination directly
@@ -402,7 +402,7 @@ public class KidnapperAI : MonoBehaviour
                         targetPosition = player.position;
                     }
                 }
-                
+
                 // Only update if destination changed significantly
                 if (Vector3.Distance(targetPosition, lastDestination) > 0.5f || !agent.hasPath)
                 {
@@ -411,7 +411,7 @@ public class KidnapperAI : MonoBehaviour
                     lastPathUpdateTime = Time.time;
                 }
             }
-            
+
             // Check if path is valid and handle issues
             if (!agent.pathPending)
             {
@@ -422,7 +422,7 @@ public class KidnapperAI : MonoBehaviour
                     {
                         Debug.LogWarning("Path to player is invalid! Trying to find alternative route.");
                     }
-                    
+
                     // Try finding a point closer to player that IS reachable
                     Vector3 directionToPlayer = (player.position - transform.position).normalized;
                     for (float distance = 2f; distance <= detectionRange; distance += 2f)
@@ -440,7 +440,7 @@ public class KidnapperAI : MonoBehaviour
                     }
                 }
             }
-            
+
             // Smooth rotation towards movement direction
             if (agent.velocity.magnitude > 0.1f)
             {
@@ -508,7 +508,7 @@ public class KidnapperAI : MonoBehaviour
     IEnumerator PerformAttack()
     {
         isAttacking = true;
-        
+
         if (animator != null)
         {
             animator.SetTrigger(animAttackParam);
@@ -517,8 +517,15 @@ public class KidnapperAI : MonoBehaviour
         // Wait for attack animation (adjust time based on your animation length)
         yield return new WaitForSeconds(1f);
 
-        // Here you can add logic to damage player or trigger game over
-        // For example: GameManager.Instance.PlayerCaught();
+        // Trigger game over when player is caught
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.PlayerCaught();
+        }
+        else
+        {
+            Debug.LogWarning("GameManager.Instance is null! Player was caught but game over cannot be triggered.");
+        }
 
         isAttacking = false;
         currentState = AIState.Chasing;
@@ -563,7 +570,7 @@ public class KidnapperAI : MonoBehaviour
         // Set idle state
         bool isIdle = agent.isStopped || speed < 0.1f;
         animator.SetBool(animIdleParam, isIdle);
-        
+
         // Debug animation state occasionally
         if (Time.frameCount % 60 == 0) // Every 60 frames
         {
@@ -608,6 +615,44 @@ public class KidnapperAI : MonoBehaviour
                 }
             }
         }
+    }
+
+    // Save/Load methods for SaveSystem
+    public int GetCurrentPatrolIndex()
+    {
+        return currentPatrolIndex;
+    }
+
+    public Vector3 GetLastKnownPlayerPosition()
+    {
+        return lastKnownPlayerPosition;
+    }
+
+    public bool IsPlayerDetected()
+    {
+        return playerDetected;
+    }
+
+    public void SetCurrentPatrolIndex(int index)
+    {
+        if (index >= 0 && patrolPoints != null && index < patrolPoints.Length)
+        {
+            currentPatrolIndex = index;
+            if (agent != null && patrolPoints[index] != null)
+            {
+                agent.SetDestination(patrolPoints[index].position);
+            }
+        }
+    }
+
+    public void SetLastKnownPlayerPosition(Vector3 position)
+    {
+        lastKnownPlayerPosition = position;
+    }
+
+    public void SetPlayerDetected(bool detected)
+    {
+        playerDetected = detected;
     }
 }
 
