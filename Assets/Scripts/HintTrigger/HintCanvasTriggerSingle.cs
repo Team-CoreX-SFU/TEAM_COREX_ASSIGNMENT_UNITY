@@ -10,13 +10,10 @@ public class HintCanvasTriggerSingle : MonoBehaviour
     public float fadeInTime = 0.5f;
     public float fadeOutTime = 0.5f;
 
-    private bool playerInside = false;
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            playerInside = true;
             StopAllCoroutines();
             StartCoroutine(FadeCanvas(hintCanvas, 1f, fadeInTime));  // Fade in
         }
@@ -26,7 +23,6 @@ public class HintCanvasTriggerSingle : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            playerInside = false;
             StopAllCoroutines();
             StartCoroutine(FadeCanvas(hintCanvas, 0f, fadeOutTime)); // Fade out
         }
