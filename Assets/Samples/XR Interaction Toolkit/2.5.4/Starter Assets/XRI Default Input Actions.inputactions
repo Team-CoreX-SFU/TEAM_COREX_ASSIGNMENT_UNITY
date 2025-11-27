@@ -1130,17 +1130,6 @@
                 },
                 {
                     "name": "",
-                    "id": "117d84b3-c62f-4551-8a32-1fdfae041415",
-                    "path": "<XRSimulatedController>{LeftHand}/primary2DAxis",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Continuous Move",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "5fe0ed53-b4d3-4cd8-b567-397a7d1e1c6a",
                     "path": "<XRController>{LeftHand}/{Primary2DAxis}",
                     "interactions": "",
