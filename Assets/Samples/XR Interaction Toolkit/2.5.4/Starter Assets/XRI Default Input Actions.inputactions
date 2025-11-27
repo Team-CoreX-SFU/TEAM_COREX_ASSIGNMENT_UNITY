@@ -1074,6 +1074,17 @@
                     "isPartOfComposite": false
                 },
                 {
+                    "name": "",
+                    "id": "466e0fe7-bbd5-4dc2-af8a-9ec8fe5693d1",
+                    "path": "<XRSimulatedController>{LeftHand}/primary2DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
                     "name": "2D Vector",
                     "id": "5e102728-6a91-48ef-9afa-595ef4366c37",
                     "path": "2DVector",
