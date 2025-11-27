@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     [Header("Scene Names")]
     public string mainSceneName = "MainScene";
     public string gameManagerSceneName = "GameManagerScene";
+    public string gameOverSceneName = "GameOverScene";
 
     [Header("UI References")]
     [Tooltip("Button that triggers save game")]
@@ -38,6 +39,20 @@ public class GameManager : MonoBehaviour
     public System.Action OnGameLoaded;
 
     private SaveSystem saveSystem;
+
+    /// <summary>
+    /// Ensure there is always a GameManager in the scene before anything runs.
+    /// This makes sure KidnapperAI and other scripts can safely call GameManager.Instance.
+    /// </summary>
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    private static void BootstrapGameManager()
+    {
+        if (Instance == null)
+        {
+            GameObject gmObj = new GameObject("GameManager");
+            gmObj.AddComponent<GameManager>();
+        }
+    }
 
     void Awake()
     {
@@ -134,7 +149,15 @@ public class GameManager : MonoBehaviour
         CurrentState = GameState.GameOver;
         OnGameOver?.Invoke();
         Debug.Log("Game Over - Player was caught!");
-        // You can add UI display, scene transition, etc. here
+        // Load the dedicated Game Over scene with the respawn countdown
+        if (!string.IsNullOrEmpty(gameOverSceneName))
+        {
+            SceneManager.LoadScene(gameOverSceneName);
+        }
+        else
+        {
+            Debug.LogError("GameOver scene name is not set on GameManager!");
+        }
     }
 
     /// <summary>
