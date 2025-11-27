@@ -30,10 +30,23 @@ public class RadioController : MonoBehaviour
     [Header("Fade Settings")]
     public float fadeInDuration = 0.5f;
     public float fadeOutDuration = 0.35f;
+    [Tooltip("Delay in seconds before playing sound after toggling on.")]
+    public float playDelay = 5f;
+
+    [Header("Visual Feedback")]
+    [Tooltip("ActiveLight GameObject that shows emission when radio is on. Should be a child object with a material that has emission enabled.")]
+    public GameObject activeLight;
+    [Tooltip("Emission color when radio is on.")]
+    public Color emissionColor = Color.green;
+    [Tooltip("Emission intensity when radio is on.")]
+    [Range(0f, 5f)]
+    public float emissionIntensity = 1f;
 
     private Coroutine fadeRoutine;
     private float fadeVolume = 0f;
     private float distanceMultiplier = 1f;
+    private Material activeLightMaterial;
+    private bool emissionWasEnabled = false;
 
     void Awake()
     {
@@ -54,6 +67,66 @@ public class RadioController : MonoBehaviour
         if (listenerTarget == null)
         {
             FindListener();
+        }
+
+        // Setup ActiveLight
+        SetupActiveLight();
+    }
+
+    void SetupActiveLight()
+    {
+        if (activeLight == null)
+        {
+            // Try to find ActiveLight as a child
+            Transform activeLightTransform = transform.Find("ActiveLight");
+            if (activeLightTransform != null)
+            {
+                activeLight = activeLightTransform.gameObject;
+            }
+        }
+
+        if (activeLight != null)
+        {
+            Renderer renderer = activeLight.GetComponent<Renderer>();
+            if (renderer != null && renderer.material != null)
+            {
+                // Create instance material to avoid modifying shared material
+                activeLightMaterial = renderer.material;
+                
+                // Check if emission is already enabled
+                if (activeLightMaterial.IsKeywordEnabled("_EMISSION"))
+                {
+                    emissionWasEnabled = true;
+                }
+                
+                // Ensure emission is initially off
+                SetEmission(false);
+            }
+            else
+            {
+                Debug.LogWarning($"RadioController: ActiveLight '{activeLight.name}' has no Renderer or Material!");
+            }
+        }
+    }
+
+    void SetEmission(bool enabled)
+    {
+        if (activeLightMaterial == null) return;
+
+        if (enabled)
+        {
+            // Enable emission
+            activeLightMaterial.EnableKeyword("_EMISSION");
+            activeLightMaterial.SetColor("_EmissionColor", emissionColor * emissionIntensity);
+            
+            // Make sure the material is set to use emission
+            activeLightMaterial.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
+        }
+        else
+        {
+            // Disable emission
+            activeLightMaterial.DisableKeyword("_EMISSION");
+            activeLightMaterial.SetColor("_EmissionColor", Color.black);
         }
     }
 
@@ -80,12 +153,27 @@ public class RadioController : MonoBehaviour
             StopCoroutine(fadeRoutine);
         }
 
+        // If turning off, immediately disable emission
+        if (!isOn)
+        {
+            SetEmission(false);
+        }
+
         fadeRoutine = StartCoroutine(isOn ? FadeIn() : FadeOut());
     }
 
     public void InsertBattery()
     {
         hasBattery = true;
+    }
+
+    /// <summary>
+    /// Returns true if the radio sound is actually playing (after delay).
+    /// Use this instead of isOn to check if sound is audible.
+    /// </summary>
+    public bool IsSoundPlaying()
+    {
+        return radioAudioSource != null && radioAudioSource.isPlaying && fadeVolume > 0f;
     }
 
     public void SetPlayerInRange(bool value, bool autoPowerOff = true)
@@ -124,16 +212,35 @@ public class RadioController : MonoBehaviour
             fadeVolume = 0f;
             ApplyVolume();
             radioAudioSource.Stop();
+            SetEmission(false);
         }
     }
 
     IEnumerator FadeIn()
     {
+        // Enable ActiveLight emission immediately when toggled on
+        SetEmission(true);
+
+        // Wait for the delay before playing sound
+        if (playDelay > 0f)
+        {
+            yield return new WaitForSeconds(playDelay);
+        }
+
+        // Check if radio is still on (might have been toggled off during delay)
+        if (!isOn)
+        {
+            SetEmission(false);
+            yield break;
+        }
+
+        // Start playing audio
         if (!radioAudioSource.isPlaying)
         {
             radioAudioSource.Play();
         }
 
+        // Fade in volume
         float elapsed = 0f;
         while (elapsed < fadeInDuration)
         {
@@ -151,6 +258,7 @@ public class RadioController : MonoBehaviour
     {
         if (radioAudioSource == null)
         {
+            SetEmission(false);
             yield break;
         }
 
@@ -168,6 +276,9 @@ public class RadioController : MonoBehaviour
         fadeVolume = 0f;
         ApplyVolume();
         radioAudioSource.Stop();
+        
+        // Disable ActiveLight emission after fade out
+        SetEmission(false);
     }
 
     void UpdateDistanceMultiplier()

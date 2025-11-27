@@ -91,30 +91,10 @@ public class GameManager : MonoBehaviour
         }
 
         // Load game data if returning from GameManager scene
-        string currentScene = SceneManager.GetActiveScene().name;
-        Debug.Log($"[GAME MANAGER] Start() called. Current scene: {currentScene}, MainScene name: {mainSceneName}");
-
-        if (currentScene == mainSceneName)
+        if (SceneManager.GetActiveScene().name == mainSceneName)
         {
-            Debug.Log("[GAME MANAGER] MainScene detected! Starting return logic...");
-            StartCoroutine(LoadGameOnReturnDelayed());
+            LoadGameOnReturn();
         }
-        else
-        {
-            Debug.Log($"[GAME MANAGER] Not MainScene (current: {currentScene}), skipping return logic");
-        }
-    }
-
-    private System.Collections.IEnumerator LoadGameOnReturnDelayed()
-    {
-        Debug.Log("[GAME MANAGER] LoadGameOnReturnDelayed started, waiting for initialization...");
-        // Wait a frame for everything to initialize
-        yield return null;
-        yield return null;
-        yield return new WaitForSeconds(0.1f);
-
-        Debug.Log("[GAME MANAGER] Calling LoadGameOnReturn()...");
-        LoadGameOnReturn();
     }
 
     /// <summary>
@@ -192,77 +172,23 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void LoadGameOnReturn()
     {
-        Debug.Log("[GAME MANAGER] LoadGameOnReturn() called!");
-
-        // Get or create PortalManager
-        PortalManager portalManager = FindObjectOfType<PortalManager>();
-        if (portalManager == null)
-        {
-            Debug.Log("[GAME MANAGER] PortalManager not found, creating new one...");
-            GameObject managerObj = new GameObject("PortalManager");
-            portalManager = managerObj.AddComponent<PortalManager>();
-        }
-        else
-        {
-            Debug.Log("[GAME MANAGER] PortalManager found!");
-        }
-
-        // Load non-portal game data if it exists (flashlight, batteries, etc.)
         if (saveSystem != null && saveSystem.SaveFileExists())
         {
-            Debug.Log("[GAME MANAGER] Loading save file (non-portal data only)...");
-            saveSystem.LoadGameWithoutPlayerPosition();
-        }
+            LoadGame();
 
-        // Wait one frame for scene to fully load, then return player to portal (using in-memory lastUsedPortalIndex)
-        Debug.Log("[GAME MANAGER] Starting ReturnPlayerToPortalDelayed coroutine...");
-        StartCoroutine(ReturnPlayerToPortalDelayed(portalManager));
-    }
-
-    private System.Collections.IEnumerator ReturnPlayerToPortalDelayed(PortalManager portalManager)
-    {
-        // Minimal wait to let scene objects initialize (no visible delay)
-        yield return null;
-
-        // Return player to the portal they entered from (or default portal)
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null && portalManager != null)
-        {
-            int portalIndex = portalManager.LastUsedPortalIndex;
-            Debug.Log($"[RETURN] Attempting to return player to portal. Last used index: {portalIndex}");
-
-            // Get portal position before teleporting
-            Portal returnPortal = portalManager.GetReturnPortal();
-            if (returnPortal != null)
+            // Return player to the portal they entered from
+            PortalManager portalManager = FindObjectOfType<PortalManager>();
+            if (portalManager == null)
             {
-                Vector3 targetPos = returnPortal.transform.position;
-                Debug.Log($"[RETURN] Target portal position: {targetPos}, Current player position: {player.transform.position}");
+                GameObject managerObj = new GameObject("PortalManager");
+                portalManager = managerObj.AddComponent<PortalManager>();
+            }
 
-                // Teleport player
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null && portalManager != null)
+            {
                 portalManager.ReturnPlayerToPortal(player);
-
-                // Verify position was set
-                yield return null; // Wait one frame
-                Debug.Log($"[RETURN] After teleport - Player position: {player.transform.position}, Target was: {targetPos}");
-
-                // If position didn't stick, try again
-                if (Vector3.Distance(player.transform.position, targetPos) > 0.5f)
-                {
-                    Debug.Log($"[RETURN] Position didn't stick, trying again...");
-                    player.transform.position = targetPos;
-                    yield return null;
-                    player.transform.position = targetPos;
-                    Debug.Log($"[RETURN] Final position after retry: {player.transform.position}");
-                }
             }
-            else
-            {
-                Debug.LogError("[RETURN] Could not get return portal!");
-            }
-        }
-        else
-        {
-            Debug.LogWarning($"[RETURN] Player or PortalManager not found. Player: {player != null}, PortalManager: {portalManager != null}");
         }
     }
 
