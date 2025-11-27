@@ -14,6 +14,11 @@ public class SaveSystem : MonoBehaviour
 
     public SaveData CurrentSaveData { get; private set; }
 
+    /// <summary>
+    /// Get the save file path (for debugging)
+    /// </summary>
+    public string GetSaveFilePath() => SaveFilePath;
+
     void Awake()
     {
         if (Instance == null)
@@ -50,6 +55,61 @@ public class SaveSystem : MonoBehaviour
         catch (Exception e)
         {
             Debug.LogError($"Failed to save game: {e.Message}");
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Save ONLY the portal index (quick save when entering portal, no save button needed)
+    /// </summary>
+    public bool SavePortalIndexOnly(int portalIndex)
+    {
+        try
+        {
+            Debug.Log($"[SAVE SYSTEM] SavePortalIndexOnly called with index: {portalIndex}");
+            Debug.Log($"[SAVE SYSTEM] Save file path: {SaveFilePath}");
+            Debug.Log($"[SAVE SYSTEM] File exists before save: {File.Exists(SaveFilePath)}");
+
+            // Load existing save if it exists, or create new one
+            if (File.Exists(SaveFilePath))
+            {
+                string existingJson = File.ReadAllText(SaveFilePath);
+                CurrentSaveData = JsonUtility.FromJson<SaveData>(existingJson);
+                Debug.Log($"[SAVE SYSTEM] Loaded existing save. Previous portal index: {CurrentSaveData.lastUsedPortalIndex}");
+            }
+            else
+            {
+                CurrentSaveData = new SaveData();
+                Debug.Log("[SAVE SYSTEM] Creating new save data");
+            }
+
+            // Update just the portal index
+            int oldIndex = CurrentSaveData.lastUsedPortalIndex;
+            CurrentSaveData.lastUsedPortalIndex = portalIndex;
+            CurrentSaveData.saveTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
+            // Save to file
+            string json = JsonUtility.ToJson(CurrentSaveData, true);
+            File.WriteAllText(SaveFilePath, json);
+
+            // Verify it was written
+            if (File.Exists(SaveFilePath))
+            {
+                string verifyJson = File.ReadAllText(SaveFilePath);
+                SaveData verifyData = JsonUtility.FromJson<SaveData>(verifyJson);
+                Debug.Log($"[SAVE SYSTEM] ✓ Portal index saved: {oldIndex} → {portalIndex}. Verified in file: {verifyData.lastUsedPortalIndex}");
+                Debug.Log($"[SAVE SYSTEM] Save file location: {SaveFilePath}");
+                return true;
+            }
+            else
+            {
+                Debug.LogError($"[SAVE SYSTEM] ✗ File was not created! Path: {SaveFilePath}");
+                return false;
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"[SAVE SYSTEM] Failed to save portal index: {e.Message}\nStack: {e.StackTrace}");
             return false;
         }
     }
@@ -326,6 +386,36 @@ public class SaveSystem : MonoBehaviour
         ApplyRadioData();
     }
 
+    /// <summary>
+    /// Apply loaded save data WITHOUT player position or portal data
+    /// (used when returning from portal; portal index is kept in memory only)
+    /// </summary>
+    public void LoadGameWithoutPlayerPosition()
+    {
+        if (CurrentSaveData == null)
+        {
+            Debug.LogWarning("No save data to apply!");
+            return;
+        }
+
+        // Skip player position AND portal index - portal system uses in-memory state only
+
+        // Apply flashlight data
+        ApplyFlashlightData();
+
+        // Apply battery data
+        ApplyBatteryData();
+
+        // Apply keypad data
+        ApplyKeypadData();
+
+        // Apply enemy data
+        ApplyEnemyData();
+
+        // Apply radio data
+        ApplyRadioData();
+    }
+
     private void ApplyPlayerData()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -359,9 +449,18 @@ public class SaveSystem : MonoBehaviour
     private void ApplyPortalData()
     {
         PortalManager portalManager = FindObjectOfType<PortalManager>();
-        if (portalManager != null && CurrentSaveData.lastUsedPortalIndex >= 0)
+        if (portalManager != null)
         {
-            portalManager.SetLastUsedPortal(CurrentSaveData.lastUsedPortalIndex);
+            // Load the saved portal index (or use default if no save)
+            if (CurrentSaveData.lastUsedPortalIndex >= 0 && CurrentSaveData.lastUsedPortalIndex < 3)
+            {
+                portalManager.LoadLastUsedPortalIndex(CurrentSaveData.lastUsedPortalIndex);
+            }
+            else
+            {
+                // No valid save, use default portal index (0)
+                portalManager.LoadLastUsedPortalIndex(-1); // Will trigger default
+            }
         }
     }
 
