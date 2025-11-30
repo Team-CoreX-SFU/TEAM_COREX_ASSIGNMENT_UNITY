@@ -6065,7 +6065,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   flashlight: {fileID: 1396228941}
   radios:
-  - {fileID: 0}
+  - {fileID: 1809148426}
   disappearDelay: 0.1
 --- !u!114 &1493712764
 MonoBehaviour:
@@ -7398,6 +7398,17 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &1809148426 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5556221335492517155, guid: 908dbd2636e3d4f0cb5828bdd2d61fa0, type: 3}
+  m_PrefabInstance: {fileID: 1601980730}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a720eed6e41c94a2294a8b81057c43aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1879668913
 GameObject:
   m_ObjectHideFlags: 0
