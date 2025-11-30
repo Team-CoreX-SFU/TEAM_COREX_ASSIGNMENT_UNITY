@@ -5,8 +5,7 @@ using UnityEngine.InputSystem;
 /// Trigger zone for power supply interaction.
 /// Player enters zone and presses 'E' key multiple times to perform steps one by one:
 /// 1. First 'E' press → Cover opens
-/// 2. Second 'E' press → Switch turns off
-/// 3. Third 'E' press → Fuse is removed
+/// 2. Second 'E' press → Switch turns off AND Fuse is removed (both happen together)
 /// Requires screwdriver to be collected first.
 /// </summary>
 public class PowerSupplyTriggerZone : MonoBehaviour
@@ -112,32 +111,41 @@ public class PowerSupplyTriggerZone : MonoBehaviour
         }
         else if (currentStep == 1)
         {
-            // Step 2: Turn Off Switch
+            // Step 2: Turn Off Switch AND Remove Fuse (both at the same time)
+            bool actionPerformed = false;
+            
+            // Turn Off Switch
             if (switchController != null && switchController.IsOn())
             {
-                isProcessing = true;
                 switchController.TurnOff();
-                currentStep = 2;
-                PlayInteractionSound();
+                actionPerformed = true;
                 Debug.Log("PowerSupplyTriggerZone: Step 2 - Switch turning off...");
-                
-                // Wait for switch animation to complete, then allow next step
-                StartCoroutine(WaitForNextStep(switchController.animationDuration));
             }
-        }
-        else if (currentStep == 2)
-        {
-            // Step 3: Remove Fuse
+            
+            // Remove Fuse
             if (fuseController != null && !fuseController.IsRemoved())
             {
-                isProcessing = true;
                 fuseController.RemoveFuse();
-                currentStep = 3;
+                actionPerformed = true;
+                Debug.Log("PowerSupplyTriggerZone: Step 2 - Fuse removing...");
+            }
+            
+            if (actionPerformed)
+            {
+                isProcessing = true;
+                currentStep = 2;
                 PlayInteractionSound();
-                Debug.Log("PowerSupplyTriggerZone: Step 3 - Fuse removing...");
                 
-                // All steps complete
-                isProcessing = false;
+                // Wait for switch animation to complete (fuse removal happens independently)
+                if (switchController != null)
+                {
+                    StartCoroutine(WaitForNextStep(switchController.animationDuration));
+                }
+                else
+                {
+                    // If no switch, just wait a bit for fuse removal
+                    StartCoroutine(WaitForNextStep(0.5f));
+                }
             }
         }
         else

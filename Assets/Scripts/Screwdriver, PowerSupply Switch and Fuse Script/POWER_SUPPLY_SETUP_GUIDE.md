@@ -97,17 +97,23 @@ Each step waits for the previous animation to complete before allowing the next 
 
 ### 3.5 Setup Light Control
 1. In the **PowerSupplySwitchController** component, find the **Light Control** section
-2. **Option A - Direct Light Assignment**:
+2. **Set Cut Electric Delay**:
+   - **Cut Electric Delay**: `0.5` seconds (delay before lights turn off after switch is turned off)
+   - Adjust this value to control how long after the switch turns off before lights go out
+   - Default is 0.5 seconds
+3. **Option A - Direct Light Assignment**:
    - Expand **Lights To Turn Off** array
    - Set the array size to the number of lights you want to control
    - Drag Light components directly into the array slots
-3. **Option B - GameObject Assignment**:
+4. **Option B - GameObject Assignment**:
    - Expand **Light Objects To Turn Off** array
    - Set the array size to the number of GameObjects with lights
    - Drag GameObjects that have Light components into the array
    - Enable **Search Children For Lights** if lights are child objects
-4. When the switch is turned off, all assigned lights will automatically turn off
-5. If the switch can be turned back on, lights will turn back on automatically
+5. When the switch is turned off:
+   - Switch animation plays
+   - After the delay (Cut Electric Delay), all assigned lights will turn off
+6. If the switch can be turned back on, lights will turn back on immediately
 
 ---
 

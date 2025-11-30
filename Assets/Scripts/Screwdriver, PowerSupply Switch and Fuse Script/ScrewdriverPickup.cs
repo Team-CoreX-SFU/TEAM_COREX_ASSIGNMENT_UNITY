@@ -53,6 +53,9 @@ public class ScrewdriverPickup : MonoBehaviour
         // Mark that player has collected the screwdriver
         hasScrewdriver = true;
         
+        // Show collection notification (no duration = stays visible)
+        PlayerFollowUIManager.ShowCollectionNotification("Screwdriver");
+        
         // Legacy support: notify components
         if (powerSupplyCover != null)
         {

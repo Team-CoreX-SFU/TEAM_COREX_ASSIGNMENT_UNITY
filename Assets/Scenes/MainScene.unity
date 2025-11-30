@@ -1270,6 +1270,10 @@ PrefabInstance:
       value: FirstFloor
       objectReference: {fileID: 0}
     - target: {fileID: -8335072791719632326, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
+    - target: {fileID: -8335072791719632326, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -1544,6 +1548,10 @@ PrefabInstance:
     - target: {fileID: 3490221514605040018, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
       propertyPath: m_Name
       value: GroundFloor
+      objectReference: {fileID: 0}
+    - target: {fileID: 3490221514605040018, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
+      propertyPath: m_TagString
+      value: Wall
       objectReference: {fileID: 0}
     - target: {fileID: 3490221514605040018, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -3760,7 +3768,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_text
-      value: (Press B to turn on the radio.)
+      value: (Press E to turn on the radio.)
       objectReference: {fileID: 0}
     - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_margin.x
@@ -3769,6 +3777,10 @@ PrefabInstance:
     - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_margin.y
       value: -94.22456
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957707700008208039, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_Alpha
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4957707700008208039, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_Enabled
@@ -5038,7 +5050,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_text
-      value: (Press B to open the box and another B to cut the fuse.)
+      value: (Press E to open the box and another E to switch off and cut the fuse.)
       objectReference: {fileID: 0}
     - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_margin.x
@@ -5520,6 +5532,7 @@ MonoBehaviour:
   audioSource: {fileID: 0}
   switchOffSound: {fileID: 0}
   switchOnSound: {fileID: 0}
+  cutElectricDelay: 6
   lightsToTurnOff: []
   lightObjectsToTurnOff:
   - {fileID: 775116339}
@@ -6780,6 +6793,10 @@ PrefabInstance:
       value: Kidnappers
       objectReference: {fileID: 0}
     - target: {fileID: 3500715503801967847, guid: 5a38d24fdc4974105b34c66c7da2ea40, type: 3}
+      propertyPath: wallLayer.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8937324628580380822, guid: 5a38d24fdc4974105b34c66c7da2ea40, type: 3}
       propertyPath: wallLayer.m_Bits
       value: 0
       objectReference: {fileID: 0}
