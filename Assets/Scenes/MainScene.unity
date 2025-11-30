@@ -4203,7 +4203,7 @@ MonoBehaviour:
   fuseController: {fileID: 1754370800}
   playerTag: Player
   interactionKey: 19
-  requireScrewdriver: 0
+  requireScrewdriver: 1
   audioSource: {fileID: 0}
   interactionSound: {fileID: 0}
   delayBetweenSteps: 0.5
@@ -7062,9 +7062,33 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4986553489540147943, guid: 908dbd2636e3d4f0cb5828bdd2d61fa0, type: 3}
+      propertyPath: toggleAction.m_Action.m_SingletonActionBindings.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4986553489540147943, guid: 908dbd2636e3d4f0cb5828bdd2d61fa0, type: 3}
+      propertyPath: toggleAction.m_Action.m_SingletonActionBindings.Array.data[0].m_Id
+      value: 3dc99061-83c0-4172-930f-6f54b52a3716
+      objectReference: {fileID: 0}
+    - target: {fileID: 4986553489540147943, guid: 908dbd2636e3d4f0cb5828bdd2d61fa0, type: 3}
+      propertyPath: toggleAction.m_Action.m_SingletonActionBindings.Array.data[0].m_Path
+      value: <Keyboard>/e
+      objectReference: {fileID: 0}
     - target: {fileID: 5556221335492517155, guid: 908dbd2636e3d4f0cb5828bdd2d61fa0, type: 3}
       propertyPath: hasBattery
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6910436623483225399, guid: 908dbd2636e3d4f0cb5828bdd2d61fa0, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6910436623483225399, guid: 908dbd2636e3d4f0cb5828bdd2d61fa0, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6910436623483225399, guid: 908dbd2636e3d4f0cb5828bdd2d61fa0, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
