@@ -804,12 +804,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1817018533866169856, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_text
-      value: 'Find Battery to use Flashlight & Radio.
-
-        Find Flashlight to
-        use in Ground Floor.
-
-        Find Radio to distrub Kidnapper.'
+      value: 'Find Battery, Flashlight and Radio. '
       objectReference: {fileID: 0}
     - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -853,11 +848,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_text
-      value: Do Silently
+      value: (Do Quietly.)
       objectReference: {fileID: 0}
     - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_margin.x
-      value: -7.241684
+      value: -439.18198
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_margin.y
+      value: -106.18925
       objectReference: {fileID: 0}
     - target: {fileID: 4957707700008208039, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_Enabled
@@ -877,7 +876,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9216973206807576852, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_text
-      value: 'First Floor Guide '
+      value: First Floor Hint
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -915,6 +914,13 @@ Transform:
   m_Children:
   - {fileID: 1102842626}
   - {fileID: 157722605}
+  - {fileID: 240011859}
+  - {fileID: 1057647730}
+  - {fileID: 630684671}
+  - {fileID: 570258501}
+  - {fileID: 347677936}
+  - {fileID: 1540640960}
+  - {fileID: 963648145}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &233728775
@@ -1011,6 +1017,11 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!4 &240011859 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+  m_PrefabInstance: {fileID: 859679081}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &244772756
 GameObject:
   m_ObjectHideFlags: 0
@@ -1494,6 +1505,38 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[1]
       value: 
       objectReference: {fileID: 2100000, guid: d40889b5b95634ee396ad041dee61911, type: 2}
+    - target: {fileID: 2673685250473311550, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -21.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2673685250473311550, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -24.88
+      objectReference: {fileID: 0}
+    - target: {fileID: 2673685250473311550, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -27.61
+      objectReference: {fileID: 0}
+    - target: {fileID: 2673685250473311550, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 2673685250473311550, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2673685250473311550, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 2673685250473311550, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2673685250473311550, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90
+      objectReference: {fileID: 0}
     - target: {fileID: 3334694241048001903, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
       propertyPath: m_LocalPosition.x
       value: -12.29
@@ -2006,6 +2049,100 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 334162093}
   m_Mesh: {fileID: 4300000, guid: 1e52035628344394687b7f7018d53968, type: 3}
+--- !u!1001 &347677935
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 197596519}
+    m_Modifications:
+    - target: {fileID: 1817018533866169856, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_text
+      value: Turn on the flashlight to get the first pin.
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 22.601
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.036
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -128.111
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.699057
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.10639244
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.699057
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.10639247
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 17.307
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_text
+      value: (Press B to toggle the flashlight.)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_margin.x
+      value: -435.90628
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_margin.y
+      value: -94.22456
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957707700008208039, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068814191236011971, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7119185171340519813, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_Name
+      value: TriggerPlace
+      objectReference: {fileID: 0}
+    - target: {fileID: 8618597944686574149, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_Name
+      value: WhiteBoardHint
+      objectReference: {fileID: 0}
+    - target: {fileID: 9216973206807576852, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_text
+      value: Whiteboard
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+--- !u!4 &347677936 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+  m_PrefabInstance: {fileID: 347677935}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &360165285
 GameObject:
   m_ObjectHideFlags: 0
@@ -3279,6 +3416,101 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 565542670}
   m_Mesh: {fileID: 4300000, guid: 1e52035628344394687b7f7018d53968, type: 3}
+--- !u!1001 &570258500
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 197596519}
+    m_Modifications:
+    - target: {fileID: 1817018533866169856, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_text
+      value: "You\u2019re on the ground floor. Find 3 whiteboards and use the flashlight
+        to unlock the pin."
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 28.394
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.743
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -126.603
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.5364078
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.843959
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 115.121
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_text
+      value: (Avoid being seen by the kidnappers)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_margin.x
+      value: -435.90628
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_margin.y
+      value: -94.22456
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957707700008208039, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068814191236011971, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7119185171340519813, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_Name
+      value: TriggerPlace
+      objectReference: {fileID: 0}
+    - target: {fileID: 8618597944686574149, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_Name
+      value: GroundFloorGuideHint
+      objectReference: {fileID: 0}
+    - target: {fileID: 9216973206807576852, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_text
+      value: Ground Floor Guide
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+--- !u!4 &570258501 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+  m_PrefabInstance: {fileID: 570258500}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &570835792 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6678424352922488531, guid: beff538831825ec97a8bdd524f4bc0f0, type: 3}
@@ -3473,6 +3705,101 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!1001 &630684670
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 197596519}
+    m_Modifications:
+    - target: {fileID: 1817018533866169856, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_text
+      value: Turn on the radio to distract the kidnappers and hide. Collect the battery
+        first. And hide somewhere safe.
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 35.22
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 5.497
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -122.882
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.7028003
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.09988116
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.6973334
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.09910422
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 16.177
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 270.447
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_text
+      value: (Press B to turn on the radio.)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_margin.x
+      value: -435.90628
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_margin.y
+      value: -94.22456
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957707700008208039, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068814191236011971, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7119185171340519813, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_Name
+      value: TriggerPlace
+      objectReference: {fileID: 0}
+    - target: {fileID: 8618597944686574149, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_Name
+      value: RadioSceneHint
+      objectReference: {fileID: 0}
+    - target: {fileID: 9216973206807576852, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_text
+      value: Radio
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+--- !u!4 &630684671 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+  m_PrefabInstance: {fileID: 630684670}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &634684400
 GameObject:
   m_ObjectHideFlags: 0
@@ -4034,39 +4361,39 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 43.934
+      value: 24.292
       objectReference: {fileID: 0}
     - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.878
+      value: 1.577
       objectReference: {fileID: 0}
     - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -122.703
+      value: -131.9643
       objectReference: {fileID: 0}
     - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9932492
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.10928752
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.03865518
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0042532417
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -12.558
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -4.457
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -4228,6 +4555,95 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1001 &859679081
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 197596519}
+    m_Modifications:
+    - target: {fileID: 1817018533866169856, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_text
+      value: Take the flashlight and find the batteries so you can turn it on.
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 31.218
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 5.191
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -130.841
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.5364078
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.843959
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 115.121
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_text
+      value: (G to grab while holding Shift and position, then release Shift.)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_margin.x
+      value: -435.90628
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_margin.y
+      value: -94.22456
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957707700008208039, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068814191236011971, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7119185171340519813, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_Name
+      value: TriggerPlace
+      objectReference: {fileID: 0}
+    - target: {fileID: 8618597944686574149, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_Name
+      value: FlashlightSceneHint
+      objectReference: {fileID: 0}
+    - target: {fileID: 9216973206807576852, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_text
+      value: Flash Light
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
 --- !u!4 &886089771 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4030544982476679133, guid: 50b3dca135e1f6f448e3d0b1f91a4de2, type: 3}
@@ -4567,6 +4983,101 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7657786ed34ad4057b843839d9b8b968, type: 3}
+--- !u!1001 &963648144
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 197596519}
+    m_Modifications:
+    - target: {fileID: 1817018533866169856, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_text
+      value: Cut off the power supply and hide. Stay still until the kidnappers arrive
+        at the basement.
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 35.704
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.6357408
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -131.679
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.88641274
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.08911708
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.4519579
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.04543841
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 11.482
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -54.032
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_text
+      value: (Press B to open the box and another B to cut the fuse.)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_margin.x
+      value: -435.90628
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_margin.y
+      value: -94.22456
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957707700008208039, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068814191236011971, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7119185171340519813, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_Name
+      value: TriggerPlace
+      objectReference: {fileID: 0}
+    - target: {fileID: 8618597944686574149, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_Name
+      value: FuseSceneHint
+      objectReference: {fileID: 0}
+    - target: {fileID: 9216973206807576852, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_text
+      value: Fuse
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+--- !u!4 &963648145 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+  m_PrefabInstance: {fileID: 963648144}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &973006848 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -8335072791719632326, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
@@ -4856,6 +5367,100 @@ Transform:
   - {fileID: 819877121}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1057647729
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 197596519}
+    m_Modifications:
+    - target: {fileID: 1817018533866169856, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_text
+      value: Pick up the batteries to use with flashlight and radio.
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 23.147
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 5.191
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -120.88
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_text
+      value: (Hover on the battery and pressed G)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_margin.x
+      value: -435.90628
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_margin.y
+      value: -94.22456
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957707700008208039, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068814191236011971, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7119185171340519813, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_Name
+      value: TriggerPlace
+      objectReference: {fileID: 0}
+    - target: {fileID: 8618597944686574149, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_Name
+      value: BatterySceneHint
+      objectReference: {fileID: 0}
+    - target: {fileID: 9216973206807576852, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_text
+      value: Battery
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+--- !u!4 &1057647730 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+  m_PrefabInstance: {fileID: 1057647729}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1091412295 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5224240811749695539, guid: beff538831825ec97a8bdd524f4bc0f0, type: 3}
@@ -6665,6 +7270,100 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!1001 &1540640959
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 197596519}
+    m_Modifications:
+    - target: {fileID: 1817018533866169856, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_text
+      value: Find the fuse box.
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 29.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.795
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -126.432
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_text
+      value: (Do quietly)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_margin.x
+      value: -435.90628
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_margin.y
+      value: -94.22456
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957707700008208039, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068814191236011971, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7119185171340519813, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_Name
+      value: TriggerPlace
+      objectReference: {fileID: 0}
+    - target: {fileID: 8618597944686574149, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_Name
+      value: BasementGuideHint
+      objectReference: {fileID: 0}
+    - target: {fileID: 9216973206807576852, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_text
+      value: Basement Guide
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+--- !u!4 &1540640960 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+  m_PrefabInstance: {fileID: 1540640959}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1549750679
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8719,8 +9418,8 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1817018533866169856, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_text
-      value: You hands had been tied with Rope Handcuff. Find Metal Plate and Cut
-        the Handcuff.
+      value: "You\u2019re on the first floor and handcuffed.  Find the metal plate
+        to cut the rope to release. "
       objectReference: {fileID: 0}
     - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8764,11 +9463,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_text
-      value: Go Near and Press Enter to Cut
+      value: (Go near the metal plate. Press Enter to cut the rope.)
       objectReference: {fileID: 0}
     - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_margin.x
-      value: -403.69727
+      value: -433.4229
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_margin.y
+      value: -79.420715
       objectReference: {fileID: 0}
     - target: {fileID: 4957707700008208039, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_Enabled
@@ -8788,7 +9491,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9216973206807576852, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_text
-      value: Starting Guide
+      value: Cut the Rope
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
