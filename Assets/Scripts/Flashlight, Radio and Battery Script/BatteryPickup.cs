@@ -26,6 +26,9 @@ public class BatteryPickup : MonoBehaviour
 
     private void OnGrabbed(SelectEnterEventArgs args)
     {
+        // Show collection notification (no duration = stays visible)
+        PlayerFollowUIManager.ShowCollectionNotification("Battery");
+        
         // Let the flashlight know battery is inserted
         if (flashlight != null)
         {

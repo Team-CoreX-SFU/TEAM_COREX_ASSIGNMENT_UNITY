@@ -47,6 +47,7 @@ public class RadioController : MonoBehaviour
     private float distanceMultiplier = 1f;
     private Material activeLightMaterial;
     private bool emissionWasEnabled = false;
+    private UINotification delayTimer; // Timer UI for play delay
 
     void Awake()
     {
@@ -153,13 +154,22 @@ public class RadioController : MonoBehaviour
             StopCoroutine(fadeRoutine);
         }
 
-        // If turning off, immediately disable emission
+        // If turning off, hide timer and disable emission
         if (!isOn)
         {
+            HideDelayTimer();
             SetEmission(false);
+            fadeRoutine = StartCoroutine(FadeOut());
         }
-
-        fadeRoutine = StartCoroutine(isOn ? FadeIn() : FadeOut());
+        else
+        {
+            // If turning on, show countdown timer for delay
+            if (playDelay > 0f)
+            {
+                ShowDelayTimer();
+            }
+            fadeRoutine = StartCoroutine(FadeIn());
+        }
     }
 
     public void InsertBattery()
@@ -197,6 +207,7 @@ public class RadioController : MonoBehaviour
         }
 
         isOn = false;
+        HideDelayTimer(); // Hide timer when radio is turned off
 
         if (fadeRoutine != null)
         {
@@ -215,17 +226,49 @@ public class RadioController : MonoBehaviour
             SetEmission(false);
         }
     }
+    
+    /// <summary>
+    /// Show countdown timer for radio play delay
+    /// </summary>
+    private void ShowDelayTimer()
+    {
+        if (playDelay <= 0f) return;
+        
+        // Hide existing timer if any
+        HideDelayTimer();
+        
+        // Show new countdown timer
+        delayTimer = PlayerFollowUIManager.ShowTimer("Radio starting in", playDelay, () => {
+            // Timer complete callback - sound should start now
+            delayTimer = null;
+        });
+    }
+    
+    /// <summary>
+    /// Hide the delay timer
+    /// </summary>
+    private void HideDelayTimer()
+    {
+        if (delayTimer != null)
+        {
+            delayTimer.Hide();
+            delayTimer = null;
+        }
+    }
 
     IEnumerator FadeIn()
     {
         // Enable ActiveLight emission immediately when toggled on
         SetEmission(true);
 
-        // Wait for the delay before playing sound
+        // Wait for the delay before playing sound (timer will countdown during this)
         if (playDelay > 0f)
         {
             yield return new WaitForSeconds(playDelay);
         }
+
+        // Hide timer when delay is complete
+        HideDelayTimer();
 
         // Check if radio is still on (might have been toggled off during delay)
         if (!isOn)

@@ -34,6 +34,9 @@ public class PowerSupplySwitchController : MonoBehaviour
     public AudioClip switchOnSound;
     
     [Header("Light Control")]
+    [Tooltip("Delay in seconds before turning off lights after switch is turned off")]
+    public float cutElectricDelay = 0.5f;
+    
     [Tooltip("Lights to turn off when switch is turned off")]
     public Light[] lightsToTurnOff;
     
@@ -46,6 +49,7 @@ public class PowerSupplySwitchController : MonoBehaviour
     private bool isOn = true; // Switch starts in ON position
     private bool isAnimating = false;
     private Coroutine animationCoroutine;
+    private UINotification delayTimer; // Timer UI for cut electric delay
     
     void Awake()
     {
@@ -92,8 +96,14 @@ public class PowerSupplySwitchController : MonoBehaviour
             audioSource.PlayOneShot(switchOffSound);
         }
         
-        // Turn off lights
-        TurnOffLights();
+        // Show countdown timer for cut electric delay
+        if (cutElectricDelay > 0f)
+        {
+            ShowDelayTimer();
+        }
+        
+        // Turn off lights after delay
+        StartCoroutine(TurnOffLightsWithDelay());
     }
     
     /// <summary>
@@ -110,6 +120,9 @@ public class PowerSupplySwitchController : MonoBehaviour
         {
             audioSource.PlayOneShot(switchOnSound);
         }
+        
+        // Hide timer if switch is turned back on
+        HideDelayTimer();
         
         // Turn on lights (if switch can be turned back on)
         TurnOnLights();
@@ -165,6 +178,57 @@ public class PowerSupplySwitchController : MonoBehaviour
     public bool IsOff()
     {
         return !isOn;
+    }
+    
+    /// <summary>
+    /// Coroutine to turn off lights after a delay.
+    /// </summary>
+    private IEnumerator TurnOffLightsWithDelay()
+    {
+        // Wait for the delay before cutting electric (timer will countdown during this)
+        // Ensure we always wait at least a tiny bit to avoid immediate execution
+        float delay = Mathf.Max(0.1f, cutElectricDelay);
+        
+        Debug.Log($"PowerSupplySwitchController: Waiting {delay} seconds before cutting electric...");
+        
+        yield return new WaitForSeconds(delay);
+        
+        Debug.Log("PowerSupplySwitchController: Delay complete, turning off lights now.");
+        
+        // Hide timer when delay is complete
+        HideDelayTimer();
+        
+        // Turn off all lights
+        TurnOffLights();
+    }
+    
+    /// <summary>
+    /// Show countdown timer for cut electric delay
+    /// </summary>
+    private void ShowDelayTimer()
+    {
+        if (cutElectricDelay <= 0f) return;
+        
+        // Hide existing timer if any
+        HideDelayTimer();
+        
+        // Show new countdown timer
+        delayTimer = PlayerFollowUIManager.ShowTimer("Power cutting in", cutElectricDelay, () => {
+            // Timer complete callback - lights should turn off now
+            delayTimer = null;
+        });
+    }
+    
+    /// <summary>
+    /// Hide the delay timer
+    /// </summary>
+    private void HideDelayTimer()
+    {
+        if (delayTimer != null)
+        {
+            delayTimer.Hide();
+            delayTimer = null;
+        }
     }
     
     /// <summary>
