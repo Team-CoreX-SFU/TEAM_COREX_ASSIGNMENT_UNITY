@@ -230,6 +230,14 @@ public class GameManager : MonoBehaviour
             Debug.Log("[GAME MANAGER] PortalManager found!");
         }
 
+        // If we have never used a portal this session (fresh game start),
+        // do NOT reposition the player – just keep the scene's default spawn.
+        if (portalManager.LastUsedPortalIndex < 0)
+        {
+            Debug.Log("[GAME MANAGER] No last used portal index set (fresh start). Skipping return-to-portal logic.");
+            return;
+        }
+
         // Load non-portal game data if it exists (flashlight, batteries, etc.)
         if (saveSystem != null && saveSystem.SaveFileExists())
         {
