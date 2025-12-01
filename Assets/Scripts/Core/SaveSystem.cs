@@ -33,6 +33,16 @@ public class SaveSystem : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        // Auto-load save file if it exists, so other scripts can check ropeCut etc. immediately
+        if (SaveFileExists())
+        {
+            LoadGame();
+            Debug.Log("[SAVE SYSTEM] Auto-loaded save file on Start().");
+        }
+    }
+
     /// <summary>
     /// Save the current game state
     /// </summary>
@@ -202,6 +212,9 @@ public class SaveSystem : MonoBehaviour
 
         // Collect radio data
         CollectRadioData();
+
+        // Collect rope / handcuff data
+        CollectRopeData();
     }
 
     private void CollectPlayerData()
@@ -354,6 +367,34 @@ public class SaveSystem : MonoBehaviour
     }
 
     /// <summary>
+    /// Collects the cut/not-cut state of the rope/handcuff.
+    /// Assumes any rope objects are tagged with "Rope".
+    /// If no active rope objects are found, we treat it as already cut.
+    /// </summary>
+    private void CollectRopeData()
+    {
+        // Try to find any active GameObject(s) tagged as Rope.
+        GameObject[] ropes = GameObject.FindGameObjectsWithTag("Rope");
+        bool anyActiveRope = false;
+
+        if (ropes != null && ropes.Length > 0)
+        {
+            foreach (var rope in ropes)
+            {
+                if (rope != null && rope.activeInHierarchy)
+                {
+                    anyActiveRope = true;
+                    break;
+                }
+            }
+        }
+
+        // If there is at least one active rope, it has not been cut.
+        // If there are no active ropes, we consider the rope cut.
+        CurrentSaveData.ropeCut = !anyActiveRope;
+    }
+
+    /// <summary>
     /// Apply loaded save data to the current scene
     /// </summary>
     public void ApplySaveData()
@@ -384,6 +425,9 @@ public class SaveSystem : MonoBehaviour
 
         // Apply radio data
         ApplyRadioData();
+
+        // Apply rope / handcuff data
+        ApplyRopeData();
     }
 
     /// <summary>
@@ -414,6 +458,9 @@ public class SaveSystem : MonoBehaviour
 
         // Apply radio data
         ApplyRadioData();
+
+        // Apply rope / handcuff data
+        ApplyRopeData();
     }
 
     private void ApplyPlayerData()
@@ -562,6 +609,64 @@ public class SaveSystem : MonoBehaviour
             radio.transform.rotation = Quaternion.Euler(CurrentSaveData.radioRotation);
             radio.SetActive(CurrentSaveData.radioActive);
         }
+    }
+
+    /// <summary>
+    /// Apply rope/handcuff cut state.
+    /// If the rope has been cut previously, immediately:
+    /// - Enable hands (via any HandMovementToggleInspector in the scene)
+    /// - Destroy any rope/handcuff objects, regardless of where the player is
+    /// This runs every time the scene loads and ropeCut is true.
+    /// </summary>
+    private void ApplyRopeData()
+    {
+        if (!CurrentSaveData.ropeCut)
+        {
+            // Rope has not been cut yet; leave it as placed in the scene.
+            return;
+        }
+
+        Debug.Log("[SAVE SYSTEM] ropeCut=true, applying global rope cut state on scene load.");
+
+        // 1) Enable hands everywhere (no sound, no delay), independent of trigger zones
+        var handToggles = FindObjectsOfType<HandMovementToggleInspector>();
+        foreach (var toggle in handToggles)
+        {
+            if (toggle == null) continue;
+            toggle.handsEnabled = true;
+            toggle.ApplyHandState();
+        }
+
+        // 2) Destroy any rope/handcuff objects we know about, regardless of where they are
+
+        // By tag "Rope"
+        GameObject[] ropesByTag = null;
+        try
+        {
+            ropesByTag = GameObject.FindGameObjectsWithTag("Rope");
+        }
+        catch (UnityException)
+        {
+            // Tag might not exist; ignore.
+        }
+
+        if (ropesByTag != null)
+        {
+            foreach (var rope in ropesByTag)
+            {
+                if (rope == null) continue;
+                Destroy(rope);
+            }
+        }
+
+        // By name "RopeHandcuff" (in case tag is not used)
+        GameObject ropeByName = GameObject.Find("RopeHandcuff");
+        if (ropeByName != null)
+        {
+            Destroy(ropeByName);
+        }
+
+        Debug.Log("[SAVE SYSTEM] Global rope cut applied: hands enabled and rope objects removed.");
     }
 }
 

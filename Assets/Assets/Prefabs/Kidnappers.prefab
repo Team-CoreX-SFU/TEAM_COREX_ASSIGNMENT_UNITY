@@ -318,6 +318,9 @@ MonoBehaviour:
     m_Bits: 512
   animator: {fileID: 3998233887958838962}
   currentState: 0
+  canRestorePower: 1
+  powerSwitchLocation: {fileID: 0}
+  powerRestoreWaitTime: 300
 --- !u!82 &1784946941960978955
 AudioSource:
   m_ObjectHideFlags: 0
@@ -608,6 +611,9 @@ MonoBehaviour:
     m_Bits: 512
   animator: {fileID: 4745929798290912871}
   currentState: 0
+  canRestorePower: 1
+  powerSwitchLocation: {fileID: 0}
+  powerRestoreWaitTime: 300
 --- !u!82 &7791612033783486173
 AudioSource:
   m_ObjectHideFlags: 0
@@ -898,6 +904,9 @@ MonoBehaviour:
     m_Bits: 512
   animator: {fileID: 337777117218560243}
   currentState: 0
+  canRestorePower: 1
+  powerSwitchLocation: {fileID: 0}
+  powerRestoreWaitTime: 300
 --- !u!114 &332625360481712836
 MonoBehaviour:
   m_ObjectHideFlags: 0

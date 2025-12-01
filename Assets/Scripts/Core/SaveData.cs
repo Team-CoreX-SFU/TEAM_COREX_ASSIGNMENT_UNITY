@@ -40,6 +40,10 @@ public class SaveData
     public Vector3 radioRotation;
     public bool radioActive;
 
+    // Rope / handcuff cut state
+    // When true, the rope has already been cut and should not appear again on load.
+    public bool ropeCut;
+
     // Timestamp
     public string saveTime;
 }

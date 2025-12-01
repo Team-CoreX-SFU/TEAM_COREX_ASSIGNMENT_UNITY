@@ -7,7 +7,7 @@ using UnityEngine;
 public class PlayerFollowUIManager : MonoBehaviour
 {
     public static PlayerFollowUIManager Instance { get; private set; }
-    
+
     [Header("UI Reference")]
     [Tooltip("The PlayerFollowUI component. Auto-found if null.")]
     public PlayerFollowUI playerFollowUI;
@@ -25,7 +25,7 @@ public class PlayerFollowUIManager : MonoBehaviour
     // Internal tracking for keypad pins
     private bool[] exitDoorCollectedDigits;
     private UINotification exitDoorNotification;
-    
+
     void Awake()
     {
         if (Instance == null)
@@ -38,12 +38,12 @@ public class PlayerFollowUIManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        
+
         // Find PlayerFollowUI if not assigned
         if (playerFollowUI == null)
         {
             playerFollowUI = FindObjectOfType<PlayerFollowUI>();
-            
+
             if (playerFollowUI == null)
             {
                 Debug.LogWarning("PlayerFollowUIManager: PlayerFollowUI not found! Creating one...");
@@ -57,39 +57,39 @@ public class PlayerFollowUIManager : MonoBehaviour
             exitDoorCollectedDigits = new bool[exitDoorKeypadCode.Length];
         }
     }
-    
+
     private void CreatePlayerFollowUI()
     {
         // Create canvas
         GameObject canvasObj = new GameObject("PlayerFollowUI");
         Canvas canvas = canvasObj.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.WorldSpace;
-        
+
         // Set canvas size
         RectTransform rectTransform = canvasObj.GetComponent<RectTransform>();
         if (rectTransform != null)
         {
             rectTransform.sizeDelta = new Vector2(1920, 1080);
         }
-        
+
         // Add CanvasScaler for proper scaling
         UnityEngine.UI.CanvasScaler scaler = canvasObj.AddComponent<UnityEngine.UI.CanvasScaler>();
         scaler.uiScaleMode = UnityEngine.UI.CanvasScaler.ScaleMode.ConstantPixelSize;
-        
+
         // Add GraphicRaycaster
         canvasObj.AddComponent<UnityEngine.UI.GraphicRaycaster>();
-        
+
         // Set layer to UI
         canvasObj.layer = LayerMask.NameToLayer("UI");
-        
+
         // For Screen Space Overlay, positioning doesn't matter
         // Canvas will render on screen regardless of world position
         // So we don't need to position it near camera
-        
+
         // Add PlayerFollowUI component
         playerFollowUI = canvasObj.AddComponent<PlayerFollowUI>();
     }
-    
+
     /// <summary>
     /// Show a notification
     /// </summary>
@@ -103,10 +103,10 @@ public class PlayerFollowUIManager : MonoBehaviour
             Debug.LogWarning("PlayerFollowUIManager not initialized! Cannot show notification.");
             return null;
         }
-        
+
         return Instance.playerFollowUI.ShowNotification(message, duration, icon);
     }
-    
+
     /// <summary>
     /// Show a collection notification (common use case)
     /// Does not auto-hide by default - stays until manually hidden or new notification replaces it
@@ -116,7 +116,7 @@ public class PlayerFollowUIManager : MonoBehaviour
         // Duration of 0 means don't auto-hide
         return ShowNotification($"Collected: {itemName}", duration);
     }
-    
+
     /// <summary>
     /// Show a timer that counts down
     /// </summary>
@@ -127,10 +127,10 @@ public class PlayerFollowUIManager : MonoBehaviour
             Debug.LogWarning("PlayerFollowUIManager not initialized! Cannot show timer.");
             return null;
         }
-        
+
         return Instance.playerFollowUI.ShowTimer(label, duration, onComplete);
     }
-    
+
     /// <summary>
     /// Show a hide timer (countdown until something hides)
     /// </summary>

@@ -64,6 +64,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: rope_handcuff Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 6526971953910857340, guid: bde7e960bf21c3a4f896d27b76d51e7b, type: 3}
+      propertyPath: m_TagString
+      value: Rope
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
