@@ -308,3 +308,54 @@ This keeps important countdowns visible at the top while collection feedback app
 - `UpdateMessage(string newMessage)` - Update notification text
 - `GetRemainingTime()` - Get remaining time (for timers)
 
+
+## Exit Door Keypad Pins Notification
+
+This project includes a helper system for showing the Exit Door keypad pins (e.g. **152**) as the player collects them.
+
+### Components
+
+- `ExitDoorKeypadPinsManager` (in `Core`)
+  - Tracks which digits of the keypad code have been collected
+  - Builds text like `Exit Door Code: 1 5 _`
+  - Uses `PlayerFollowUIManager.ShowNotification(..., 0f)` so it **never auto-hides**
+- `ExitDoorKeypadPinsTrigger` (in `Core`)
+  - Shows the keypad pins notification while the player is inside a trigger
+  - Hides it when the player leaves the trigger
+- `ExitDoorKeypadPinPickup` (in `Core`)
+  - Attach to each physical PIN object (1, 5, 2)
+  - When grabbed, it registers the pin with the manager
+
+### Manual Setup Steps
+
+1. **Manager**
+   - In your scene, create an empty GameObject: `ExitDoorKeypadPinsManager`
+   - Add the `ExitDoorKeypadPinsManager` component
+   - Set:
+     - **Keypad Code** = `152`
+     - **Hidden Character** = `_` (or whatever you like)
+     - **Notification Prefix** = `Exit Door Code`
+
+2. **Pins (1, 5, 2)**
+   - For each physical PIN object in the world:
+     - Add `ExitDoorKeypadPinPickup`
+     - Set **Pin Value**:
+       - First pin object: `1`
+       - Second pin object: `5`
+       - Third pin object: `2`
+     - Optionally enable **Disappear On Collection** so the pin disappears after pickup
+
+3. **Keypad Trigger (where you want the Noti)**
+   - Around the Exit Door keypad, create a GameObject with a `BoxCollider` (or any collider)
+   - Check **Is Trigger** on the collider
+   - Add `ExitDoorKeypadPinsTrigger`
+   - When the player enters this trigger:
+     - `ExitDoorKeypadPinsManager` shows `Exit Door Code: _ _ _`, `1 _ _`, `1 5 _`, `1 5 2` depending on collected pins
+   - When the player exits the trigger:
+     - The notification is hidden
+
+4. **Behavior**
+   - The keypad pins notification **does NOT auto-hide** (duration = 0)
+   - It only appears while the player is in the keypad trigger
+   - Digits always appear in the correct order (1 5 2) even if player collects them in any order
+

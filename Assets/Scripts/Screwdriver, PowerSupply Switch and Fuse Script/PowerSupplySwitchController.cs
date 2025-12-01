@@ -46,6 +46,14 @@ public class PowerSupplySwitchController : MonoBehaviour
     [Tooltip("Search for Light components in children of light objects")]
     public bool searchChildrenForLights = true;
     
+    [Header("Kidnapper Interaction")]
+    [Tooltip("How long the kidnapper waits at the switch before turning power back on (in seconds).")]
+    public float powerRestoreDelay = 300f; // 5 minutes default, configurable in Inspector
+    [Tooltip("Kidnapper AI agents that should respond when the power is cut.")]
+    public KidnapperAI[] kidnappers;
+    [Tooltip("If true, this switch will automatically notify the assigned kidnappers when it is turned off.")]
+    public bool autoNotifyKidnappersOnPowerCut = true;
+
     private bool isOn = true; // Switch starts in ON position
     private bool isAnimating = false;
     private Coroutine animationCoroutine;
@@ -101,8 +109,8 @@ public class PowerSupplySwitchController : MonoBehaviour
         {
             ShowDelayTimer();
         }
-        
-        // Turn off lights after delay
+
+        // Turn off lights after delay (and later notify kidnappers from inside that coroutine)
         StartCoroutine(TurnOffLightsWithDelay());
     }
     
@@ -200,6 +208,18 @@ public class PowerSupplySwitchController : MonoBehaviour
         
         // Turn off all lights
         TurnOffLights();
+
+        // Now that lights are actually cut, notify kidnappers so they can come and restore power
+        if (autoNotifyKidnappersOnPowerCut && kidnappers != null)
+        {
+            foreach (KidnapperAI kidnapper in kidnappers)
+            {
+                if (kidnapper != null)
+                {
+                    kidnapper.OnPowerCut(this, powerRestoreDelay);
+                }
+            }
+        }
     }
     
     /// <summary>

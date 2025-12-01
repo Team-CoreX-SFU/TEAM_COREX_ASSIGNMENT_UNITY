@@ -70,7 +70,8 @@ public class KidnapperAI : MonoBehaviour
         Chasing,
         Attacking,
         Searching,
-        InvestigatingSound
+        InvestigatingSound,
+        RestoringPower
     }
 
     [Header("State")]
@@ -93,6 +94,21 @@ public class KidnapperAI : MonoBehaviour
     private enum SoundType { Footstep, Radio }
     private SoundType currentSoundType = SoundType.Footstep;
     private RadioController investigatingRadio = null; // Track which radio we're investigating
+
+    [Header("Power Restoration")]
+    [Tooltip("If true, this kidnapper will go to the power switch and restore power when lights are cut.")]
+    public bool canRestorePower = true;
+    [Tooltip("Transform of the power supply switch the kidnapper should go to. If not set, will try to use the switch controller's transform.")]
+    public Transform powerSwitchLocation;
+    [Tooltip("How long the kidnapper waits at the power switch before turning it back on (in seconds).")]
+    public float powerRestoreWaitTime = 300f; // 5 minutes default
+    private bool isRestoringPower = false;
+    private PowerSupplySwitchController currentPowerSwitchController;
+    private Coroutine restorePowerCoroutine;
+    // True only while the kidnapper is standing at the switch and waiting to restore power.
+    private bool isWaitingToRestorePower = false;
+    // UI timer notification shown to the player while the kidnapper is restoring power.
+    private UINotification restoreTimerNotification;
 
     void Start()
     {
@@ -201,8 +217,8 @@ public class KidnapperAI : MonoBehaviour
         CheckForPlayer();
         
         // If player detected and in attack range, don't check sounds (already attacking/chasing)
-        // Otherwise, check for sounds (unless already chasing or attacking)
-        if (currentState != AIState.Chasing && currentState != AIState.Attacking)
+        // Otherwise, check for sounds (unless already chasing, attacking, or restoring power)
+        if (currentState != AIState.Chasing && currentState != AIState.Attacking && currentState != AIState.RestoringPower)
         {
             CheckForSounds();
         }
@@ -224,6 +240,9 @@ public class KidnapperAI : MonoBehaviour
                 break;
             case AIState.InvestigatingSound:
                 InvestigateSound();
+                break;
+            case AIState.RestoringPower:
+                RestorePower();
                 break;
         }
 
@@ -475,6 +494,13 @@ public class KidnapperAI : MonoBehaviour
             {
                 return; // Player not found
             }
+        }
+
+        // During power restoration, ignore player detection ONLY while waiting at the switch.
+        // On the way to the switch, the kidnapper should still be able to detect/catch the player.
+        if (currentState == AIState.RestoringPower && isWaitingToRestorePower)
+        {
+            return;
         }
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
@@ -1177,6 +1203,205 @@ public class KidnapperAI : MonoBehaviour
             isInvestigatingSound = false;
             currentState = AIState.Patrolling;
             soundInvestigationTimer = 0f;
+        }
+    }
+
+    /// <summary>
+    /// Called by the PowerSupplySwitchController when lights are cut.
+    /// Kidnapper will go to the switch, wait for the given delay, then turn it back on and resume patrolling.
+    /// </summary>
+    public void OnPowerCut(PowerSupplySwitchController switchController, float restoreDelay)
+    {
+        if (!canRestorePower || switchController == null)
+            return;
+
+        // If we're already restoring this power switch, ignore duplicate calls
+        if (isRestoringPower && currentPowerSwitchController == switchController)
+            return;
+
+        currentPowerSwitchController = switchController;
+        powerRestoreWaitTime = restoreDelay;
+        isRestoringPower = true;
+
+        // Clear sound investigation when responding to power cut
+        isInvestigatingSound = false;
+        soundInvestigationTimer = 0f;
+
+        // Determine target switch location
+        if (powerSwitchLocation == null)
+        {
+            if (switchController.switchTransform != null)
+            {
+                powerSwitchLocation = switchController.switchTransform;
+            }
+            else
+            {
+                powerSwitchLocation = switchController.transform;
+            }
+        }
+
+        // Enter restoring power state
+        currentState = AIState.RestoringPower;
+        agent.isStopped = false;
+    }
+
+    /// <summary>
+    /// State logic for going to the power switch and restoring power.
+    /// </summary>
+    private void RestorePower()
+    {
+        if (!isRestoringPower || currentPowerSwitchController == null)
+        {
+            // Nothing to restore, go back to patrol
+            isRestoringPower = false;
+            currentState = AIState.Patrolling;
+            return;
+        }
+
+        // Ensure we have a valid target transform
+        if (powerSwitchLocation == null)
+        {
+            if (currentPowerSwitchController.switchTransform != null)
+            {
+                powerSwitchLocation = currentPowerSwitchController.switchTransform;
+            }
+            else
+            {
+                powerSwitchLocation = currentPowerSwitchController.transform;
+            }
+
+            if (powerSwitchLocation == null)
+            {
+                isRestoringPower = false;
+                currentState = AIState.Patrolling;
+                return;
+            }
+        }
+
+        agent.speed = chaseSpeed;
+        agent.isStopped = false;
+        isWaitingAtPatrolPoint = false;
+
+        Vector3 targetPos = powerSwitchLocation.position;
+        float distanceToSwitch = Vector3.Distance(transform.position, targetPos);
+
+        // Update path similarly to Chase/InvestigateSound
+        float timeSinceLastUpdate = Time.time - lastPathUpdateTime;
+        bool shouldUpdatePath = timeSinceLastUpdate >= pathUpdateInterval;
+        float distanceToLastDestination = Vector3.Distance(targetPos, lastDestination);
+        bool targetMovedSignificantly = distanceToLastDestination > 0.5f;
+
+        if (shouldUpdatePath || targetMovedSignificantly || !agent.hasPath)
+        {
+            NavMeshHit hit;
+            bool onNavMesh = NavMesh.SamplePosition(targetPos, out hit, 5f, NavMesh.AllAreas);
+            Vector3 finalTarget = onNavMesh ? hit.position : targetPos;
+
+            if (Vector3.Distance(finalTarget, lastDestination) > 0.5f || !agent.hasPath)
+            {
+                agent.SetDestination(finalTarget);
+                lastDestination = finalTarget;
+                lastPathUpdateTime = Time.time;
+            }
+        }
+
+        // Smooth rotation towards movement direction
+        if (agent.velocity.magnitude > 0.1f)
+        {
+            Vector3 moveDirection = agent.velocity.normalized;
+            moveDirection.y = 0;
+            if (moveDirection.magnitude > 0.1f)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
+            }
+        }
+
+        // When close enough to the switch, start the restore coroutine (wait, then turn on)
+        if (distanceToSwitch <= 1.0f)
+        {
+            agent.isStopped = true;
+
+            if (restorePowerCoroutine == null)
+            {
+                restorePowerCoroutine = StartCoroutine(RestorePowerRoutine());
+            }
+        }
+    }
+
+    private IEnumerator RestorePowerRoutine()
+    {
+        isWaitingToRestorePower = true;
+
+        float waitTime = Mathf.Max(0f, powerRestoreWaitTime);
+        float elapsed = 0f;
+
+        // Show a timer to the player indicating how much safe time is left
+        ShowRestoreTimer(waitTime);
+
+        // Wait at the switch for the configured delay
+        while (elapsed < waitTime)
+        {
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        // After waiting, turn the switch back on if it's still off
+        if (currentPowerSwitchController != null && currentPowerSwitchController.IsOff())
+        {
+            currentPowerSwitchController.TurnOn();
+        }
+
+        // Hide the restore timer when the waiting period is over
+        HideRestoreTimer();
+
+        // Reset restoring flags/state
+        isRestoringPower = false;
+        restorePowerCoroutine = null;
+        currentPowerSwitchController = null;
+        powerSwitchLocation = null;
+        isWaitingToRestorePower = false;
+
+        // Go back to patrolling
+        currentState = AIState.Patrolling;
+
+        if (patrolPoints.Length > 0 && patrolPoints[currentPatrolIndex] != null)
+        {
+            agent.isStopped = false;
+            agent.SetDestination(patrolPoints[currentPatrolIndex].position);
+        }
+    }
+
+    /// <summary>
+    /// Show a countdown timer while the kidnapper is restoring power so the player knows
+    /// how much time is left before the kidnapper returns to normal behavior.
+    /// </summary>
+    private void ShowRestoreTimer(float duration)
+    {
+        if (duration <= 0f) return;
+
+        // Hide any existing timer first
+        HideRestoreTimer();
+
+        restoreTimerNotification = PlayerFollowUIManager.ShowTimer(
+            "Time left to run from kidnapper",
+            duration,
+            () =>
+            {
+                // Timer completed
+                restoreTimerNotification = null;
+            });
+    }
+
+    /// <summary>
+    /// Hide the restore timer notification, if any.
+    /// </summary>
+    private void HideRestoreTimer()
+    {
+        if (restoreTimerNotification != null)
+        {
+            restoreTimerNotification.Hide();
+            restoreTimerNotification = null;
         }
     }
 
