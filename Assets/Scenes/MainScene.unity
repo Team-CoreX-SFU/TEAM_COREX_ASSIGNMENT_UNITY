@@ -10085,6 +10085,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -121.646
       objectReference: {fileID: 0}
+    - target: {fileID: 1385130706364616232, guid: 4f8cabaec53d008918d4904c32349714, type: 3}
+      propertyPath: m_TagString
+      value: Rope
+      objectReference: {fileID: 0}
     - target: {fileID: 3110189925486073713, guid: 4f8cabaec53d008918d4904c32349714, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -10124,6 +10128,10 @@ PrefabInstance:
     - target: {fileID: 3110189925486073713, guid: 4f8cabaec53d008918d4904c32349714, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6012429155863559026, guid: 4f8cabaec53d008918d4904c32349714, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 6758143909926229368, guid: 4f8cabaec53d008918d4904c32349714, type: 3}
       propertyPath: m_MoveSpeed

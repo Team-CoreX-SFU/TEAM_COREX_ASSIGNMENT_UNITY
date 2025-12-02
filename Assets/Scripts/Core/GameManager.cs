@@ -105,18 +105,18 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        // Load game data if returning from GameManager scene
+        // Load game data if in MainScene (whether coming from GameManagerScene or returning via portal)
         string currentScene = SceneManager.GetActiveScene().name;
         Debug.Log($"[GAME MANAGER] Start() called. Current scene: {currentScene}, MainScene name: {mainSceneName}");
 
         if (currentScene == mainSceneName)
         {
-            Debug.Log("[GAME MANAGER] MainScene detected! Starting return logic...");
+            Debug.Log("[GAME MANAGER] MainScene detected! Starting load logic...");
             StartCoroutine(LoadGameOnReturnDelayed());
         }
         else
         {
-            Debug.Log($"[GAME MANAGER] Not MainScene (current: {currentScene}), skipping return logic");
+            Debug.Log($"[GAME MANAGER] Not MainScene (current: {currentScene}), skipping MainScene load logic");
         }
     }
 
@@ -230,19 +230,20 @@ public class GameManager : MonoBehaviour
             Debug.Log("[GAME MANAGER] PortalManager found!");
         }
 
-        // If we have never used a portal this session (fresh game start),
-        // do NOT reposition the player – just keep the scene's default spawn.
-        if (portalManager.LastUsedPortalIndex < 0)
-        {
-            Debug.Log("[GAME MANAGER] No last used portal index set (fresh start). Skipping return-to-portal logic.");
-            return;
-        }
-
-        // Load non-portal game data if it exists (flashlight, batteries, etc.)
+        // Load non-portal game data if it exists (flashlight, batteries, rope state, etc.)
         if (saveSystem != null && saveSystem.SaveFileExists())
         {
             Debug.Log("[GAME MANAGER] Loading save file (non-portal data only)...");
             saveSystem.LoadGameWithoutPlayerPosition();
+        }
+
+        // If we have never used a portal this session (fresh game start),
+        // do NOT reposition the player – just keep the scene's default spawn.
+        // But we still applied non-portal data above (rope cut state, items, etc.).
+        if (portalManager.LastUsedPortalIndex < 0)
+        {
+            Debug.Log("[GAME MANAGER] No last used portal index set (fresh start). Skipping return-to-portal teleport.");
+            return;
         }
 
         // Wait one frame for scene to fully load, then return player to portal (using in-memory lastUsedPortalIndex)
