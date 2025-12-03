@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.XR.Interaction.Toolkit;
 
 /// <summary>
 /// Main game manager that handles game state, scene transitions, and save/load functionality
@@ -17,6 +18,24 @@ public class GameManager : MonoBehaviour
     [Header("UI References")]
     [Tooltip("Button that triggers save game")]
     public Button saveFileButton;
+
+    [Header("Caught Sequence Settings")]
+    [Tooltip("Slow motion time scale when player is caught (0.1 = 10% speed)")]
+    [Range(0.1f, 0.5f)]
+    public float caughtSlowMotionScale = 0.3f;
+
+    [Tooltip("Duration to wait for kidnapper attack animation before loading game over scene (in real seconds, not affected by slow motion)")]
+    public float caughtSequenceDuration = 2f;
+
+    [Header("Damage Overlay Settings")]
+    [Tooltip("Color of the damage overlay when caught")]
+    public Color damageOverlayColor = new Color(1f, 0f, 0f, 0.5f); // Red with 50% opacity
+
+    [Tooltip("Fade in duration for damage overlay")]
+    public float overlayFadeInDuration = 0.5f;
+
+    [Tooltip("Fade out duration for damage overlay (before game over)")]
+    public float overlayFadeOutDuration = 0.3f;
 
     public enum GameState
     {
@@ -39,6 +58,10 @@ public class GameManager : MonoBehaviour
     public System.Action OnGameLoaded;
 
     private SaveSystem saveSystem;
+    private bool isCaughtSequenceActive = false;
+    private bool punchCompleted = false;
+    private GameObject damageOverlayObject;
+    private UnityEngine.UI.Image damageOverlayImage;
 
     /// <summary>
     /// Ensure there is always a GameManager in the scene before anything runs.
@@ -135,10 +158,59 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Called when player is caught by kidnapper
     /// </summary>
-    public void PlayerCaught()
+    /// <param name="kidnapperPosition">Position of the kidnapper who caught the player (optional)</param>
+    public void PlayerCaught(Vector3? kidnapperPosition = null)
     {
+        if (isCaughtSequenceActive)
+        {
+            // Already in caught sequence, ignore duplicate calls
+            return;
+        }
+
         OnPlayerCaught?.Invoke();
-        GameOver();
+
+        // Start caught sequence with slow motion and camera rotation
+        if (kidnapperPosition.HasValue)
+        {
+            StartCoroutine(CaughtSequence(kidnapperPosition.Value));
+        }
+        else
+        {
+            // If no kidnapper position provided, try to find the closest kidnapper
+            KidnapperAI[] kidnappers = FindObjectsOfType<KidnapperAI>();
+            Vector3 kidnapperPos = Vector3.zero;
+            if (kidnappers != null && kidnappers.Length > 0)
+            {
+                // Find closest kidnapper to player
+                GameObject player = GameObject.FindGameObjectWithTag("Player");
+                if (player != null)
+                {
+                    float closestDistance = float.MaxValue;
+                    foreach (var kidnapper in kidnappers)
+                    {
+                        if (kidnapper != null)
+                        {
+                            float distance = Vector3.Distance(player.transform.position, kidnapper.transform.position);
+                            if (distance < closestDistance)
+                            {
+                                closestDistance = distance;
+                                kidnapperPos = kidnapper.transform.position;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (kidnapperPos != Vector3.zero)
+            {
+                StartCoroutine(CaughtSequence(kidnapperPos));
+            }
+            else
+            {
+                // No kidnapper found, just go straight to game over
+                GameOver();
+            }
+        }
     }
 
     /// <summary>
@@ -353,6 +425,172 @@ public class GameManager : MonoBehaviour
             CurrentState = GameState.Playing;
             Time.timeScale = 1f;
         }
+    }
+
+    /// <summary>
+    /// Called by KidnapperAI when the punch/attack animation is complete
+    /// </summary>
+    public void OnPunchCompleted()
+    {
+        punchCompleted = true;
+        Debug.Log("[GAME MANAGER] Punch completed signal received");
+    }
+
+    /// <summary>
+    /// Coroutine that handles the caught sequence: slow motion and red overlay, waits for punch to complete
+    /// </summary>
+    private System.Collections.IEnumerator CaughtSequence(Vector3 kidnapperPosition)
+    {
+        isCaughtSequenceActive = true;
+        punchCompleted = false; // Reset punch completion flag
+        CurrentState = GameState.GameOver;
+
+        Debug.Log($"[GAME MANAGER] Starting caught sequence. Kidnapper position: {kidnapperPosition}");
+
+        // Apply slow motion immediately
+        Time.timeScale = caughtSlowMotionScale;
+        Debug.Log($"[GAME MANAGER] Applied slow motion: {caughtSlowMotionScale}");
+
+        // Show red damage overlay
+        StartCoroutine(ShowDamageOverlay());
+
+        // Wait for kidnapper punch to complete
+        // Check every frame until punch is completed
+        float maxWaitTime = 10f; // Safety timeout (in real seconds)
+        float elapsed = 0f;
+
+        while (!punchCompleted && elapsed < maxWaitTime)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        if (punchCompleted)
+        {
+            Debug.Log("[GAME MANAGER] Punch completed, transitioning to game over");
+        }
+        else
+        {
+            Debug.LogWarning($"[GAME MANAGER] Punch completion timeout after {maxWaitTime} seconds, transitioning anyway");
+        }
+
+        // Small delay after punch to let it sink in
+        yield return new WaitForSecondsRealtime(0.5f);
+
+        // Fade out damage overlay before scene change
+        yield return StartCoroutine(HideDamageOverlay());
+
+        // Restore time scale before scene change
+        Time.timeScale = 1f;
+        Debug.Log("[GAME MANAGER] Restored time scale");
+
+        isCaughtSequenceActive = false;
+        punchCompleted = false; // Reset for next time
+
+        // Load game over scene
+        GameOver();
+    }
+
+    /// <summary>
+    /// Creates and shows a red damage overlay on screen
+    /// </summary>
+    private System.Collections.IEnumerator ShowDamageOverlay()
+    {
+        // Find or create canvas for overlay
+        Canvas overlayCanvas = FindObjectOfType<Canvas>();
+        if (overlayCanvas == null || overlayCanvas.renderMode != RenderMode.ScreenSpaceOverlay)
+        {
+            // Create a new canvas for the overlay
+            GameObject canvasObj = new GameObject("DamageOverlayCanvas");
+            overlayCanvas = canvasObj.AddComponent<Canvas>();
+            overlayCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            overlayCanvas.sortingOrder = 9999; // Make sure it's on top of everything
+
+            CanvasScaler scaler = canvasObj.AddComponent<CanvasScaler>();
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(1920, 1080);
+
+            canvasObj.AddComponent<UnityEngine.UI.GraphicRaycaster>();
+        }
+
+        // Create overlay image if it doesn't exist
+        if (damageOverlayObject == null)
+        {
+            damageOverlayObject = new GameObject("DamageOverlay");
+            damageOverlayObject.transform.SetParent(overlayCanvas.transform, false);
+
+            RectTransform rectTransform = damageOverlayObject.AddComponent<RectTransform>();
+            rectTransform.anchorMin = Vector2.zero;
+            rectTransform.anchorMax = Vector2.one;
+            rectTransform.sizeDelta = Vector2.zero;
+            rectTransform.anchoredPosition = Vector2.zero;
+
+            damageOverlayImage = damageOverlayObject.AddComponent<UnityEngine.UI.Image>();
+            damageOverlayImage.color = new Color(damageOverlayColor.r, damageOverlayColor.g, damageOverlayColor.b, 0f); // Start transparent
+        }
+        else
+        {
+            // Reuse existing overlay
+            damageOverlayObject.transform.SetParent(overlayCanvas.transform, false);
+        }
+
+        // Fade in the overlay
+        float elapsed = 0f;
+        Color targetColor = damageOverlayColor;
+        Color startColor = new Color(targetColor.r, targetColor.g, targetColor.b, 0f);
+
+        while (elapsed < overlayFadeInDuration)
+        {
+            elapsed += Time.unscaledDeltaTime; // Use unscaled time so fade works during slow motion
+            float t = Mathf.Clamp01(elapsed / overlayFadeInDuration);
+
+            damageOverlayImage.color = Color.Lerp(startColor, targetColor, t);
+
+            yield return null;
+        }
+
+        // Ensure final color is exact
+        damageOverlayImage.color = targetColor;
+        Debug.Log("[GAME MANAGER] Damage overlay shown");
+    }
+
+    /// <summary>
+    /// Fades out and removes the damage overlay
+    /// </summary>
+    private System.Collections.IEnumerator HideDamageOverlay()
+    {
+        if (damageOverlayImage == null || damageOverlayObject == null)
+        {
+            yield break;
+        }
+
+        // Fade out the overlay
+        float elapsed = 0f;
+        Color startColor = damageOverlayImage.color;
+        Color targetColor = new Color(startColor.r, startColor.g, startColor.b, 0f);
+
+        while (elapsed < overlayFadeOutDuration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(elapsed / overlayFadeOutDuration);
+
+            damageOverlayImage.color = Color.Lerp(startColor, targetColor, t);
+
+            yield return null;
+        }
+
+        // Ensure final color is transparent
+        damageOverlayImage.color = targetColor;
+
+        // Destroy overlay object
+        if (damageOverlayObject != null)
+        {
+            Destroy(damageOverlayObject);
+            damageOverlayObject = null;
+            damageOverlayImage = null;
+        }
+
+        Debug.Log("[GAME MANAGER] Damage overlay hidden");
     }
 }
 

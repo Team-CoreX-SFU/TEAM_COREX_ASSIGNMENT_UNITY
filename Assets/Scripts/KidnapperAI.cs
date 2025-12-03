@@ -215,7 +215,7 @@ public class KidnapperAI : MonoBehaviour
     {
         // Check for player detection FIRST (highest priority - visual detection overrides sound investigation)
         CheckForPlayer();
-        
+
         // If player detected and in attack range, don't check sounds (already attacking/chasing)
         // Otherwise, check for sounds (unless already chasing, attacking, or restoring power)
         if (currentState != AIState.Chasing && currentState != AIState.Attacking && currentState != AIState.RestoringPower)
@@ -259,7 +259,7 @@ public class KidnapperAI : MonoBehaviour
         if (playerFootsteps != null && player != null)
         {
             float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-            
+
             // Check if player is running (speed above running threshold)
             // When player is running, footstep sounds are playing, so kidnappers can hear them
             float playerSpeed = playerFootsteps.GetCurrentSpeed();
@@ -270,7 +270,7 @@ public class KidnapperAI : MonoBehaviour
             {
                 soundDetected = true;
                 detectedSoundPosition = player.position;
-                
+
                 if (!isInvestigatingSound || currentState != AIState.InvestigatingSound || currentSoundType != SoundType.Footstep)
                 {
                     Debug.Log($"KidnapperAI: Heard player running footsteps at distance {distanceToPlayer:F2}. Investigating!");
@@ -303,12 +303,12 @@ public class KidnapperAI : MonoBehaviour
                 if (radio.IsSoundPlaying())
                 {
                     float distanceToRadio = Vector3.Distance(transform.position, radio.transform.position);
-                    
+
                     if (distanceToRadio <= radioHearingRange)
                     {
                         soundDetected = true;
                         Vector3 radioPosition = radio.transform.position;
-                        
+
                         // Use radio position - radio takes priority over footsteps
                         if (!isInvestigatingSound || currentState != AIState.InvestigatingSound)
                         {
@@ -421,7 +421,7 @@ public class KidnapperAI : MonoBehaviour
     {
         Vector3 direction = (end - start).normalized;
         RaycastHit[] hits = Physics.RaycastAll(start, direction, maxDistance);
-        
+
         // Sort hits by distance
         for (int i = 0; i < hits.Length - 1; i++)
         {
@@ -435,7 +435,7 @@ public class KidnapperAI : MonoBehaviour
                 }
             }
         }
-        
+
         // Check all hits to see if a wall is between kidnapper and target
         foreach (RaycastHit hit in hits)
         {
@@ -443,13 +443,13 @@ public class KidnapperAI : MonoBehaviour
             bool isWall = hit.collider.gameObject.layer == wallLayerIndex ||
                           (wallLayer.value & (1 << hit.collider.gameObject.layer)) != 0 ||
                           hit.collider.CompareTag("Wall");
-            
+
             bool isPlayer = hit.collider.CompareTag("Player") ||
                            hit.collider.transform == player ||
                            hit.collider.transform.IsChildOf(player) ||
                            (hit.collider.transform.parent != null && hit.collider.transform.parent.CompareTag("Player")) ||
                            hit.collider.transform.root.CompareTag("Player");
-            
+
             // If we hit a wall before the player, wall blocks
             if (isWall && !isPlayer)
             {
@@ -460,7 +460,7 @@ public class KidnapperAI : MonoBehaviour
                 return false; // Player found before wall, no wall blocking
             }
         }
-        
+
         return false; // No wall found
     }
 
@@ -507,7 +507,7 @@ public class KidnapperAI : MonoBehaviour
 
         // Note: Attack range check is now handled in the main detection section below
         // This ensures walls are checked first before any detection/attack
-        
+
         // Check if player is in detection range (removed distance restriction for initial detection)
         if (true) // Always check for player detection regardless of distance
         {
@@ -540,7 +540,7 @@ public class KidnapperAI : MonoBehaviour
                 // Cast ray toward player position (use distance to player as max distance)
                 // Use RaycastAll to get all objects between kidnapper and player
                 RaycastHit[] hits = Physics.RaycastAll(rayStart, rayDirection, distanceToPlayer, layerMask);
-                
+
                 // Sort hits by distance to check closest objects first
                 // This ensures we check if a wall is hit before the player
                 for (int i = 0; i < hits.Length - 1; i++)
@@ -555,7 +555,7 @@ public class KidnapperAI : MonoBehaviour
                         }
                     }
                 }
-                
+
                 // Check all hits in order of distance to see if a wall is between kidnapper and player
                 // Walls ALWAYS block detection, regardless of distance - even if very close
                 bool playerHit = false;
@@ -625,7 +625,8 @@ public class KidnapperAI : MonoBehaviour
                         Debug.Log("Player detected! Game Over!");
                         if (GameManager.Instance != null)
                         {
-                            GameManager.Instance.PlayerCaught();
+                            // Pass kidnapper position so camera can rotate toward it
+                            GameManager.Instance.PlayerCaught(transform.position);
                         }
                         else
                         {
@@ -635,21 +636,21 @@ public class KidnapperAI : MonoBehaviour
 
                     // Player detected with line of sight (no wall blocking) - trigger game over immediately
                     // Then allow chase/attack states for animation purposes
-                    
+
                     // Determine state based on distance
                     float attackRangeWithBuffer = attackRange + attackRangeBuffer;
                     if (distanceToPlayer <= attackRangeWithBuffer && currentState != AIState.Attacking)
                     {
                         // Player in attack range - switch to attack state for animation
                         Debug.Log($"Player in attack range! Distance: {distanceToPlayer:F2}. Switching to attack state.");
-                        
+
                         // Stop sound investigation if was investigating
                         if (currentState == AIState.InvestigatingSound)
                         {
                             isInvestigatingSound = false;
                             soundInvestigationTimer = 0f;
                         }
-                        
+
                         currentState = AIState.Attacking;
                         agent.isStopped = true;
                     }
@@ -657,14 +658,14 @@ public class KidnapperAI : MonoBehaviour
                     {
                         // Not in attack range, but should chase for animation
                         Debug.Log($"Player detected visually! Distance: {distanceToPlayer:F2}, Angle: {angleToPlayer:F2}. Switching to chase state.");
-                        
+
                         // Stop sound investigation if was investigating
                         if (currentState == AIState.InvestigatingSound)
                         {
                             isInvestigatingSound = false;
                             soundInvestigationTimer = 0f;
                         }
-                        
+
                         currentState = AIState.Chasing;
                     }
                     return;
@@ -752,7 +753,7 @@ public class KidnapperAI : MonoBehaviour
         if (player != null)
         {
             float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-            
+
             // Player already detected (game over triggered) - chase is for animation only
             // Check attack range and switch to attack state for animation
             float attackRangeWithBuffer = attackRange + attackRangeBuffer;
@@ -762,7 +763,7 @@ public class KidnapperAI : MonoBehaviour
                 Vector3 rayStart = transform.position + Vector3.up * 1.5f;
                 Vector3 playerEyeLevel = player.position + Vector3.up * 1.5f;
                 bool wallBlocking = HasWallBetween(rayStart, playerEyeLevel, distanceToPlayer);
-                
+
                 if (!wallBlocking && currentState != AIState.Attacking)
                 {
                     // No wall - switch to attack state for animation
@@ -773,10 +774,10 @@ public class KidnapperAI : MonoBehaviour
                 }
                 // If wall blocking, continue chasing (player might have moved behind wall)
             }
-            
+
             if (playerDetected) // Chase based on detection flag
             {
-            
+
             // Continue chasing - no distance-based stopping
             agent.isStopped = false;
 
@@ -935,17 +936,18 @@ public class KidnapperAI : MonoBehaviour
             animator.SetTrigger(animAttackParam);
         }
 
-        // Wait for attack animation (adjust time based on your animation length)
+        // Wait for attack animation to complete (adjust time based on your animation length)
+        // This is the actual punch animation duration
         yield return new WaitForSeconds(1f);
 
-        // Trigger game over when player is caught
+        // Signal that punch is complete - this will trigger game over transition
         if (GameManager.Instance != null)
         {
-            GameManager.Instance.PlayerCaught();
+            GameManager.Instance.OnPunchCompleted();
         }
         else
         {
-            Debug.LogWarning("GameManager.Instance is null! Player was caught but game over cannot be triggered.");
+            Debug.LogWarning("GameManager.Instance is null! Cannot signal punch completion.");
         }
 
         isAttacking = false;
@@ -993,11 +995,11 @@ public class KidnapperAI : MonoBehaviour
         {
             soundSourcePosition = investigatingRadio.transform.position;
         }
-        
+
         if (isInvestigatingSound && soundSourcePosition != Vector3.zero)
         {
             float distanceToSound = Vector3.Distance(transform.position, soundSourcePosition);
-            
+
             // Update path more frequently for smoother following (similar to Chase method)
             float timeSinceLastUpdate = Time.time - lastPathUpdateTime;
             bool shouldUpdatePath = timeSinceLastUpdate >= pathUpdateInterval;
@@ -1044,13 +1046,13 @@ public class KidnapperAI : MonoBehaviour
                     // Footsteps: maintain safe distance from sound source to prevent pushing
                     // Use public safeDistance variable
                     Vector3 directionToSound = (soundSourcePosition - transform.position).normalized;
-                    
+
                     if (soundOnNavMesh)
                     {
                         // Sound source is on NavMesh, set destination to safe distance from sound
                         // Calculate position that maintains safe distance
                         Vector3 safeTargetPosition = soundSourcePosition - directionToSound * safeDistance;
-                        
+
                         // Re-sample to ensure safe position is on NavMesh
                         UnityEngine.AI.NavMeshHit safeHit;
                         if (UnityEngine.AI.NavMesh.SamplePosition(safeTargetPosition, out safeHit, 3f, UnityEngine.AI.NavMesh.AllAreas))
@@ -1085,7 +1087,7 @@ public class KidnapperAI : MonoBehaviour
                         {
                             // Can't find NavMesh near sound source, try to find alternative point
                             targetPosition = soundSourcePosition - directionToSound * safeDistance; // Use safe distance
-                            
+
                             // Try finding a point closer that IS reachable
                             for (float distance = safeDistance; distance <= Mathf.Min(distanceToSound, footstepHearingRange); distance += 2f)
                             {
@@ -1131,7 +1133,7 @@ public class KidnapperAI : MonoBehaviour
                     // Path is invalid, try to find alternative route
                     Vector3 directionToSound = (soundSourcePosition - transform.position).normalized;
                     float maxSearchDistance = Mathf.Min(distanceToSound, Mathf.Max(footstepHearingRange, radioHearingRange));
-                    
+
                     // Try finding a point closer to sound that IS reachable
                     for (float distance = 2f; distance <= maxSearchDistance; distance += 2f)
                     {
@@ -1170,7 +1172,7 @@ public class KidnapperAI : MonoBehaviour
             {
                 // Stop agent when reached sound location
                 agent.isStopped = true;
-                
+
                 // Arrived at sound location, look around smoothly
                 Vector3 lookDirection = (soundSourcePosition - transform.position).normalized;
                 lookDirection.y = 0;
@@ -1179,7 +1181,7 @@ public class KidnapperAI : MonoBehaviour
                     Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
                     transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 2f);
                 }
-                
+
                 // Timer handling is now done in CheckForSounds() based on sound type
                 // Footsteps: will timeout after footstepInvestigationDuration if player stops running
                 // Radio: will continue investigating while radio is playing
@@ -1188,7 +1190,7 @@ public class KidnapperAI : MonoBehaviour
             {
                 // Still moving toward sound
                 agent.isStopped = false; // Ensure agent is moving
-                
+
                 // For footsteps only: stop before getting too close to prevent pushing
                 if (currentSoundType == SoundType.Footstep && distanceToSound < soundInvestigationDistance + 0.5f)
                 {
