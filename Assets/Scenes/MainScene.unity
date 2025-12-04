@@ -754,6 +754,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 106920774}
   m_Mesh: {fileID: 4300000, guid: 1e52035628344394687b7f7018d53968, type: 3}
+--- !u!1 &107032714 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -5715784974760646808, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
+  m_PrefabInstance: {fileID: 257782495}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &107032719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 107032714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20bddf4d216e88da1a20f2335381089c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerTag: Player
+  audioSource: {fileID: 803020029}
+  victoryMusic: {fileID: 8300000, guid: 0638bd61d6c7e8dc193a6128e7bf93eb, type: 3}
+  playOnce: 1
 --- !u!1 &118230083
 GameObject:
   m_ObjectHideFlags: 0
@@ -1098,6 +1119,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1102842626}
+  - {fileID: 1351108529}
+  - {fileID: 282172774}
   - {fileID: 157722605}
   - {fileID: 240011859}
   - {fileID: 1057647730}
@@ -1846,6 +1869,14 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: -5.985
       objectReference: {fileID: 0}
+    - target: {fileID: 7077229961990488581, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
+      propertyPath: m_Convex
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7077229961990488581, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7110386558403052219, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
       propertyPath: m_Materials.Array.data[1]
       value: 
@@ -1983,12 +2014,18 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1761226895}
+    - targetCorrespondingSourceObject: {fileID: 702282882234841814, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2122427832}
     - targetCorrespondingSourceObject: {fileID: -6645467136123808239, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1754370800}
     - targetCorrespondingSourceObject: {fileID: 5424462028695913360, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1137588217}
+    - targetCorrespondingSourceObject: {fileID: -5715784974760646808, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 107032719}
     - targetCorrespondingSourceObject: {fileID: -8335072791719632326, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 973006850}
@@ -1998,6 +2035,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6188905562308975085, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1452966692}
+    - targetCorrespondingSourceObject: {fileID: 2303606557359712841, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2004091676}
     - targetCorrespondingSourceObject: {fileID: 3490221514605040018, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2115593929}
@@ -2101,6 +2141,101 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!1001 &282172773
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 197596519}
+    m_Modifications:
+    - target: {fileID: 1817018533866169856, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_text
+      value: You have escape from the kidnappers.
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 27.568
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.997
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -116
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.9942255
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.10731114
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 12.321
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_text
+      value: (Go near the metal plate. Press Enter to cut the rope.)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_margin.x
+      value: -433.4229
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_margin.y
+      value: -79.420715
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957707700008208039, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068814191236011971, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7119185171340519813, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_Name
+      value: TriggerPlace
+      objectReference: {fileID: 0}
+    - target: {fileID: 8618597944686574149, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_Name
+      value: VictoryFrontDoorHint
+      objectReference: {fileID: 0}
+    - target: {fileID: 9216973206807576852, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_text
+      value: Victory
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects:
+    - {fileID: 5100879345135978916, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+--- !u!4 &282172774 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+  m_PrefabInstance: {fileID: 282172773}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &291083041
 GameObject:
   m_ObjectHideFlags: 0
@@ -6018,37 +6153,6 @@ Transform:
   - {fileID: 87964247}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &996842668
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 996842669}
-  m_Layer: 0
-  m_Name: Door_Hinge
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &996842669
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 996842668}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &997338879
 GameObject:
   m_ObjectHideFlags: 0
@@ -7997,6 +8101,101 @@ PrefabInstance:
       addedObject: {fileID: 1526510480}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+--- !u!1001 &1351108528
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 197596519}
+    m_Modifications:
+    - target: {fileID: 1817018533866169856, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_text
+      value: You have escape from the kidnappers.
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 27.047
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -132.99
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.8182234
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.03899453
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.5729262
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.02730426
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 5.457
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 70
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_text
+      value: (Go near the metal plate. Press Enter to cut the rope.)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_margin.x
+      value: -433.4229
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679122020273922861, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_margin.y
+      value: -79.420715
+      objectReference: {fileID: 0}
+    - target: {fileID: 4957707700008208039, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068814191236011971, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7119185171340519813, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_Name
+      value: TriggerPlace
+      objectReference: {fileID: 0}
+    - target: {fileID: 8618597944686574149, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_Name
+      value: VictoryBackDoorHint
+      objectReference: {fileID: 0}
+    - target: {fileID: 9216973206807576852, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+      propertyPath: m_text
+      value: Victory
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects:
+    - {fileID: 5100879345135978916, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+--- !u!4 &1351108529 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
+  m_PrefabInstance: {fileID: 1351108528}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1396228936 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1002705123656268, guid: d86ca2f4159e6a942abd8dfc52b38395, type: 3}
@@ -11262,6 +11461,27 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!1 &2004091671 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2303606557359712841, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
+  m_PrefabInstance: {fileID: 257782495}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2004091676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2004091671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20bddf4d216e88da1a20f2335381089c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerTag: Player
+  audioSource: {fileID: 803020029}
+  victoryMusic: {fileID: 8300000, guid: 0638bd61d6c7e8dc193a6128e7bf93eb, type: 3}
+  playOnce: 1
 --- !u!1 &2037725945
 GameObject:
   m_ObjectHideFlags: 0
@@ -11695,6 +11915,27 @@ MonoBehaviour:
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: d53a33185eb0b4e00b68fa9c32d483fd, type: 2}
   m_BuildHeightMesh: 0
+--- !u!1 &2122427827 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 702282882234841814, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
+  m_PrefabInstance: {fileID: 257782495}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2122427832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2122427827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20bddf4d216e88da1a20f2335381089c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerTag: Player
+  audioSource: {fileID: 803020029}
+  victoryMusic: {fileID: 8300000, guid: 0638bd61d6c7e8dc193a6128e7bf93eb, type: 3}
+  playOnce: 1
 --- !u!1001 &1792171124570157538
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11882,4 +12123,3 @@ SceneRoots:
   - {fileID: 8314513854292382207}
   - {fileID: 1050794062}
   - {fileID: 1227598099}
-  - {fileID: 996842669}
