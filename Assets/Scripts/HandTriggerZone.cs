@@ -21,6 +21,7 @@ public class HandTriggerZone : MonoBehaviour
     public float actionDelay = 1f;    // Delay in seconds before enabling hands and destroying rope
 
     private bool playerInside = false;
+    private bool isCutting = false;  // Flag to prevent multiple activations
 
     private void Start()
     {
@@ -58,7 +59,10 @@ public class HandTriggerZone : MonoBehaviour
                 ropeHandcuff = FindRopeHandcuffInScene();
             }
 
+            // Set flag to prevent activation (rope already cut)
+            isCutting = true;
             PerformCutInstantly(false);
+            // Flag stays true since rope is already cut - no more activations possible
         }
         else
         {
@@ -173,6 +177,18 @@ public class HandTriggerZone : MonoBehaviour
     {
         if (playerInside)
         {
+            // Check if handcuff still exists - if not, don't allow activation
+            if (ropeHandcuff == null)
+            {
+                ropeHandcuff = FindRopeHandcuffInScene();
+            }
+            
+            // Only allow activation if handcuff exists and we're not already cutting
+            if (ropeHandcuff == null || isCutting)
+            {
+                return;
+            }
+
             bool pressed = false;
 
             // Keyboard input for testing
@@ -185,11 +201,17 @@ public class HandTriggerZone : MonoBehaviour
 
             if (pressed)
             {
-                // Play sound immediately
+                // Set flag to prevent multiple activations
+                isCutting = true;
+                
+                // Play sound immediately when button is pressed (not delayed)
                 if (audioSource != null && ropeCutClip != null)
+                {
                     audioSource.PlayOneShot(ropeCutClip);
-
+                }
+                
                 // Start coroutine to enable hands and destroy rope after delay
+                // Sound already played, so pass false to avoid double playback
                 StartCoroutine(EnableHandsAndDestroyRope());
             }
         }
@@ -197,11 +219,15 @@ public class HandTriggerZone : MonoBehaviour
 
     private IEnumerator EnableHandsAndDestroyRope()
     {
-        // Wait for delay
+        // Wait for delay before removing rope and enabling hands
+        // Note: Sound is already played immediately when button is pressed, not delayed
         yield return new WaitForSeconds(actionDelay);
 
-        // Perform the cut with sound (normal gameplay)
-        PerformCutInstantly(true);
+        // Perform the cut (sound already played, but show notification)
+        PerformCutInstantly(false, true);
+        
+        // Reset flag after cut is complete (handcuff is destroyed, so no more activations possible)
+        isCutting = false;
     }
 
     /// <summary>
@@ -209,7 +235,8 @@ public class HandTriggerZone : MonoBehaviour
     /// Used both by the trigger (with sound) and by the save/load system (without sound).
     /// </summary>
     /// <param name="playSound">If true, plays the rope cut sound (used during normal gameplay only).</param>
-    public void PerformCutInstantly(bool playSound)
+    /// <param name="showNotification">If true, shows the "Hands Are Free" notification (default: same as playSound).</param>
+    public void PerformCutInstantly(bool playSound, bool? showNotification = null)
     {
         // Optionally play sound
         if (playSound && audioSource != null && ropeCutClip != null)
@@ -241,6 +268,14 @@ public class HandTriggerZone : MonoBehaviour
         else
         {
             Debug.LogWarning("[HandTriggerZone] PerformCutInstantly called but RopeHandcuff object not found!");
+        }
+        
+        // Show notification that hands are free (only during normal gameplay, not when loading from save)
+        // If showNotification is not specified, default to playSound value
+        bool shouldShowNotification = showNotification ?? playSound;
+        if (shouldShowNotification)
+        {
+            PlayerFollowUIManager.ShowNotification("Hands Are Free.", 5f);
         }
     }
 }

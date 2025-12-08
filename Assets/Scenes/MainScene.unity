@@ -3693,10 +3693,10 @@ PrefabInstance:
       addedObject: {fileID: 1551065395}
     - targetCorrespondingSourceObject: {fileID: 1940605801458592, guid: b141f7cdc1f538d45b086a28d3bff349, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1551065396}
+      addedObject: {fileID: 1551065397}
     - targetCorrespondingSourceObject: {fileID: 1940605801458592, guid: b141f7cdc1f538d45b086a28d3bff349, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1551065397}
+      addedObject: {fileID: 1551065398}
   m_SourcePrefab: {fileID: 100100000, guid: b141f7cdc1f538d45b086a28d3bff349, type: 3}
 --- !u!4 &514709567 stripped
 Transform:
@@ -9734,24 +9734,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.5, y: 3, z: 1.5}
   m_Center: {x: -1, y: 0.5, z: 0}
---- !u!114 &1551065396
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1551065393}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 365715a987eb94abf98f19dbef71aedc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  handToggle: {fileID: 25352696}
-  ropeHandcuff: {fileID: 401540465}
-  audioSource: {fileID: 1551065397}
-  ropeCutClip: {fileID: 8300000, guid: dd04801f75fcf47fc85ccd426da48039, type: 3}
-  primaryKey: 2
-  actionDelay: 1.5
 --- !u!82 &1551065397
 AudioSource:
   m_ObjectHideFlags: 0
@@ -9848,6 +9830,24 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1551065398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1551065393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bb3e8a04bdc545ea93d0021837e8be7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handToggle: {fileID: 25352696}
+  ropeHandcuff: {fileID: 401540465}
+  audioSource: {fileID: 1551065397}
+  ropeCutClip: {fileID: 8300000, guid: dd04801f75fcf47fc85ccd426da48039, type: 3}
+  primaryKey: 2
+  actionDelay: 2
 --- !u!1001 &1601980730
 PrefabInstance:
   m_ObjectHideFlags: 0

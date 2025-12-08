@@ -74,6 +74,13 @@ public class PlayerFollowUI : MonoBehaviour
     public float timerFontSize = 0f;
     
     [Header("Canvas Settings")]
+    [Tooltip("Reference resolution for UI scaling (UI will scale based on this)")]
+    public Vector2 referenceResolution = new Vector2(1920, 1080);
+    
+    [Tooltip("Match width or height for scaling (0 = width, 1 = height, 0.5 = both)")]
+    [Range(0f, 1f)]
+    public float matchWidthOrHeight = 0.5f;
+    
     [Tooltip("Canvas scale for VR (typically 0.001-0.002). Auto-adjusted for non-VR.")]
     public float canvasScale = 0.002f;
     
@@ -94,6 +101,7 @@ public class PlayerFollowUI : MonoBehaviour
     public GameObject timerPrefab;
 
     private Canvas canvas;
+    private CanvasScaler canvasScaler;
     private Camera mainCamera;
     private Vector3 targetPosition;
     private Quaternion targetRotation;
@@ -107,13 +115,16 @@ public class PlayerFollowUI : MonoBehaviour
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
         canvas.sortingOrder = 100; // Make sure it's on top
         
+        // Setup Canvas Scaler for proper resolution scaling
+        SetupCanvasScaler();
+        
         // Set canvas scale based on VR mode
         RectTransform rectTransform = GetComponent<RectTransform>();
         
         // Set a reasonable canvas size
         if (rectTransform.sizeDelta == Vector2.zero)
         {
-            rectTransform.sizeDelta = new Vector2(1920, 1080); // Standard HD size
+            rectTransform.sizeDelta = referenceResolution;
         }
         
         // For Screen Space Overlay, scale doesn't matter (it's screen-relative)
@@ -121,7 +132,7 @@ public class PlayerFollowUI : MonoBehaviour
         float scale = IsVRMode() ? canvasScale : nonVRCanvasScale;
         
         // Log initial setup
-        Debug.Log($"[PlayerFollowUI] Canvas initialized. Render Mode: {canvas.renderMode}, VR Mode: {IsVRMode()}, Sorting Order: {canvas.sortingOrder}");
+        Debug.Log($"[PlayerFollowUI] Canvas initialized. Render Mode: {canvas.renderMode}, VR Mode: {IsVRMode()}, Sorting Order: {canvas.sortingOrder}, Reference Resolution: {referenceResolution}");
         
         // Create containers if they don't exist
         if (notificationContainer == null)
@@ -420,6 +431,31 @@ public class PlayerFollowUI : MonoBehaviour
     }
     
     /// <summary>
+    /// Setup Canvas Scaler for proper UI scaling across different screen resolutions
+    /// </summary>
+    void SetupCanvasScaler()
+    {
+        // Get or add Canvas Scaler component
+        canvasScaler = GetComponent<CanvasScaler>();
+        if (canvasScaler == null)
+        {
+            canvasScaler = gameObject.AddComponent<CanvasScaler>();
+        }
+        
+        // Configure Canvas Scaler for Screen Space Overlay
+        // This ensures UI scales properly on high-resolution displays
+        canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        canvasScaler.referenceResolution = referenceResolution;
+        canvasScaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+        canvasScaler.matchWidthOrHeight = matchWidthOrHeight;
+        
+        // Additional settings for better scaling
+        canvasScaler.referencePixelsPerUnit = 100;
+        
+        Debug.Log($"[PlayerFollowUI] Canvas Scaler configured. Reference Resolution: {referenceResolution}, Match: {matchWidthOrHeight}, Current Screen: {Screen.width}x{Screen.height}");
+    }
+    
+    /// <summary>
     /// Check if running in VR mode or simulator/editor mode
     /// </summary>
     private bool IsVRMode()
@@ -643,7 +679,7 @@ public class PlayerFollowUI : MonoBehaviour
         
         // Add RectTransform
         RectTransform rect = timerObj.AddComponent<RectTransform>();
-        rect.sizeDelta = new Vector2(300, 80);
+        rect.sizeDelta = timerSize;
         
         // Position based on timer container anchor (separate from notifications)
         bool isTopPosition = timerPosition == NotificationPosition.TopLeft || 
