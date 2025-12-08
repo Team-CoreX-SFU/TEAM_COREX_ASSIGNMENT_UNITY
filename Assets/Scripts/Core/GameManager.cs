@@ -302,6 +302,13 @@ public class GameManager : MonoBehaviour
             Debug.Log("[GAME MANAGER] PortalManager found!");
         }
 
+        // Ensure portals are active and visible (prevent them from disappearing)
+        // Use a coroutine to ensure this happens after scene is fully loaded
+        if (portalManager != null)
+        {
+            StartCoroutine(EnsurePortalsActiveDelayed(portalManager));
+        }
+
         // Load non-portal game data if it exists (flashlight, batteries, rope state, etc.)
         if (saveSystem != null && saveSystem.SaveFileExists())
         {
@@ -321,6 +328,27 @@ public class GameManager : MonoBehaviour
         // Wait one frame for scene to fully load, then return player to portal (using in-memory lastUsedPortalIndex)
         Debug.Log("[GAME MANAGER] Starting ReturnPlayerToPortalDelayed coroutine...");
         StartCoroutine(ReturnPlayerToPortalDelayed(portalManager));
+    }
+
+    /// <summary>
+    /// Coroutine to ensure portals are active after scene loads
+    /// </summary>
+    private System.Collections.IEnumerator EnsurePortalsActiveDelayed(PortalManager portalManager)
+    {
+        // Wait for scene to fully load
+        yield return null;
+        yield return null;
+        yield return new WaitForSeconds(0.2f);
+
+        if (portalManager != null)
+        {
+            Debug.Log("[GAME MANAGER] Ensuring portals are active...");
+            portalManager.EnsurePortalsActive();
+
+            // Double-check after another delay
+            yield return new WaitForSeconds(0.3f);
+            portalManager.EnsurePortalsActive();
+        }
     }
 
     private System.Collections.IEnumerator ReturnPlayerToPortalDelayed(PortalManager portalManager)

@@ -27,10 +27,33 @@ public class PortalManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            // Subscribe to scene loaded event to ensure portals are found when scene loads
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
             Destroy(gameObject);
+        }
+    }
+
+    void OnDestroy()
+    {
+        // Unsubscribe from scene loaded event
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        currentSceneName = scene.name;
+        Debug.Log($"[PORTAL MANAGER] Scene loaded: {currentSceneName}");
+
+        // Only find portals if we're in MainScene
+        if (currentSceneName == "MainScene")
+        {
+            Debug.Log("[PORTAL MANAGER] MainScene loaded! Finding and activating portals...");
+
+            // Wait a frame for scene objects to fully initialize, then find and activate portals
+            StartCoroutine(FindAndActivatePortalsDelayed());
         }
     }
 
@@ -50,8 +73,67 @@ public class PortalManager : MonoBehaviour
                 FindMainScenePortals();
             }
 
+            // Ensure all portals are active and visible (prevent them from disappearing)
+            EnsurePortalsAreActive();
+
             Debug.Log($"[PORTAL MANAGER] In MainScene. Found portals: [0]={mainScenePortals[0] != null}, [1]={mainScenePortals[1] != null}, [2]={mainScenePortals[2] != null}. Last used index: {lastUsedPortalIndex}, Default: {defaultPortalIndex}");
         }
+    }
+
+    /// <summary>
+    /// Coroutine to find and activate portals after scene is fully loaded
+    /// </summary>
+    private System.Collections.IEnumerator FindAndActivatePortalsDelayed()
+    {
+        // Wait a few frames for scene objects to fully initialize
+        yield return null;
+        yield return null;
+        yield return new WaitForSeconds(0.2f);
+
+        Debug.Log("[PORTAL MANAGER] Finding portals after scene load...");
+
+        // Clear old references
+        mainScenePortals[0] = null;
+        mainScenePortals[1] = null;
+        mainScenePortals[2] = null;
+
+        // Try finding portals multiple times with increasing delays
+        for (int attempt = 0; attempt < 3; attempt++)
+        {
+            Debug.Log($"[PORTAL MANAGER] Portal finding attempt {attempt + 1}/3");
+
+            // Find portals
+            FindMainScenePortals();
+
+            // Check if we found all portals
+            bool allFound = mainScenePortals[0] != null && mainScenePortals[1] != null && mainScenePortals[2] != null;
+
+            if (allFound)
+            {
+                Debug.Log("[PORTAL MANAGER] All portals found!");
+                break;
+            }
+            else
+            {
+                Debug.LogWarning($"[PORTAL MANAGER] Not all portals found yet. Found: [0]={mainScenePortals[0] != null}, [1]={mainScenePortals[1] != null}, [2]={mainScenePortals[2] != null}");
+                yield return new WaitForSeconds(0.3f);
+            }
+        }
+
+        // Ensure portals are active
+        EnsurePortalsAreActive();
+
+        // Log results
+        Debug.Log($"[PORTAL MANAGER] After scene load - Found portals: [0]={mainScenePortals[0] != null}, [1]={mainScenePortals[1] != null}, [2]={mainScenePortals[2] != null}");
+
+        // Double-check after another delay
+        yield return new WaitForSeconds(0.3f);
+        EnsurePortalsAreActive();
+
+        // Final check
+        yield return new WaitForSeconds(0.5f);
+        FindMainScenePortals();
+        EnsurePortalsAreActive();
     }
 
     /// <summary>
@@ -71,29 +153,128 @@ public class PortalManager : MonoBehaviour
     /// </summary>
     private void FindMainScenePortals()
     {
-        Portal[] foundPortals = FindObjectsOfType<Portal>();
+        Debug.Log("[PORTAL MANAGER] FindMainScenePortals() called. Searching for portals...");
+
+        // Search for all portals, including inactive ones
+        Portal[] foundPortals = FindObjectsOfType<Portal>(includeInactive: true);
+
+        Debug.Log($"[PORTAL MANAGER] Found {foundPortals?.Length ?? 0} total Portal components in scene");
+
         if (foundPortals != null && foundPortals.Length > 0)
         {
+            // Log all found portals for debugging
+            foreach (Portal portal in foundPortals)
+            {
+                if (portal != null)
+                {
+                    Debug.Log($"[PORTAL MANAGER] Found portal: {portal.gameObject.name}, Index: {portal.portalIndex}, Active: {portal.gameObject.activeInHierarchy}");
+                }
+            }
+
             // Filter portals that are in MainScene (index 0, 1, or 2)
             System.Collections.Generic.List<Portal> mainPortals = new System.Collections.Generic.List<Portal>();
             foreach (Portal portal in foundPortals)
             {
-                if (portal.portalIndex >= 0 && portal.portalIndex < 3)
+                if (portal != null && portal.portalIndex >= 0 && portal.portalIndex < 3)
                 {
                     mainPortals.Add(portal);
+                    Debug.Log($"[PORTAL MANAGER] Added portal {portal.portalIndex} ({portal.gameObject.name}) to mainPortals list");
+                }
+                else if (portal != null)
+                {
+                    Debug.Log($"[PORTAL MANAGER] Skipped portal {portal.gameObject.name} with index {portal.portalIndex} (not 0-2)");
                 }
             }
+
+            Debug.Log($"[PORTAL MANAGER] Found {mainPortals.Count} MainScene portals (index 0-2)");
 
             // Sort by portal index
             mainPortals.Sort((a, b) => a.portalIndex.CompareTo(b.portalIndex));
 
-            for (int i = 0; i < Mathf.Min(mainPortals.Count, 3); i++)
+            // Clear the array first
+            for (int i = 0; i < mainScenePortals.Length; i++)
             {
-                if (i < mainScenePortals.Length)
+                mainScenePortals[i] = null;
+            }
+
+            // Assign portals to array by their index
+            foreach (Portal portal in mainPortals)
+            {
+                if (portal != null && portal.portalIndex >= 0 && portal.portalIndex < mainScenePortals.Length)
                 {
-                    mainScenePortals[i] = mainPortals[i];
+                    mainScenePortals[portal.portalIndex] = portal;
+                    Debug.Log($"[PORTAL MANAGER] Assigned portal {portal.portalIndex} ({portal.gameObject.name}) to mainScenePortals[{portal.portalIndex}]");
                 }
             }
+
+            // Verify assignment
+            Debug.Log($"[PORTAL MANAGER] Portal assignment complete: [0]={mainScenePortals[0] != null}, [1]={mainScenePortals[1] != null}, [2]={mainScenePortals[2] != null}");
+        }
+        else
+        {
+            Debug.LogError("[PORTAL MANAGER] No Portal components found in scene! Make sure portals have Portal component attached.");
+        }
+    }
+
+    /// <summary>
+    /// Ensure all portals in MainScene are active and visible
+    /// This prevents portals from disappearing when loading from GameManager
+    /// </summary>
+    private void EnsurePortalsAreActive()
+    {
+        // Re-find portals if they're null
+        if (mainScenePortals[0] == null || mainScenePortals[1] == null || mainScenePortals[2] == null)
+        {
+            Debug.Log("[PORTAL MANAGER] Some portals are null, re-finding...");
+            FindMainScenePortals();
+        }
+
+        int activeCount = 0;
+        for (int i = 0; i < mainScenePortals.Length; i++)
+        {
+            if (mainScenePortals[i] != null)
+            {
+                // Ensure the portal GameObject and all its parents are active
+                if (!mainScenePortals[i].gameObject.activeInHierarchy)
+                {
+                    Debug.LogWarning($"[PORTAL MANAGER] Portal {i} ({mainScenePortals[i].gameObject.name}) was inactive! Activating it now...");
+                    mainScenePortals[i].gameObject.SetActive(true);
+                }
+
+                // Also ensure the portal itself is enabled
+                if (!mainScenePortals[i].enabled)
+                {
+                    Debug.LogWarning($"[PORTAL MANAGER] Portal {i} component was disabled! Enabling it now...");
+                    mainScenePortals[i].enabled = true;
+                }
+
+                // Ensure collider is enabled (portals need colliders to work)
+                Collider portalCollider = mainScenePortals[i].GetComponent<Collider>();
+                if (portalCollider != null && !portalCollider.enabled)
+                {
+                    Debug.LogWarning($"[PORTAL MANAGER] Portal {i} collider was disabled! Enabling it now...");
+                    portalCollider.enabled = true;
+                }
+
+                activeCount++;
+            }
+            else
+            {
+                Debug.LogWarning($"[PORTAL MANAGER] Portal {i} is null!");
+            }
+        }
+
+        Debug.Log($"[PORTAL MANAGER] EnsurePortalsAreActive complete. Active portals: {activeCount}/3");
+    }
+
+    /// <summary>
+    /// Public method to ensure portals are active (can be called from GameManager or other scripts)
+    /// </summary>
+    public void EnsurePortalsActive()
+    {
+        if (SceneManager.GetActiveScene().name == "MainScene")
+        {
+            EnsurePortalsAreActive();
         }
     }
 
@@ -175,6 +356,9 @@ public class PortalManager : MonoBehaviour
             Debug.Log("[PORTAL MANAGER] Portals not found, searching...");
             FindMainScenePortals();
         }
+
+        // Ensure portals are active before using them
+        EnsurePortalsAreActive();
 
         Portal returnPortal = GetReturnPortal();
         if (returnPortal != null)
@@ -323,4 +507,5 @@ public class PortalManager : MonoBehaviour
         Debug.Log($"[PORTAL MANAGER] Force position complete. Final position: {player.transform.position}");
     }
 }
+
 

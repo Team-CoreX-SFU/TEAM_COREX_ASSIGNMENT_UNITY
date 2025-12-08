@@ -783,17 +783,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5224240811749695539, guid: beff538831825ec97a8bdd524f4bc0f0, type: 3}
   m_PrefabInstance: {fileID: 87964246}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &87964248 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6678424352922488531, guid: beff538831825ec97a8bdd524f4bc0f0, type: 3}
-  m_PrefabInstance: {fileID: 87964246}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81c41dd3024af1ec2bbdea35df0e3627, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &106920774
 GameObject:
   m_ObjectHideFlags: 0
@@ -1111,17 +1100,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ce85843344b9e448b8d22bbc95634824, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &175819937 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6678424352922488531, guid: beff538831825ec97a8bdd524f4bc0f0, type: 3}
-  m_PrefabInstance: {fileID: 1969924292}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81c41dd3024af1ec2bbdea35df0e3627, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &192012918
@@ -4554,17 +4532,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
   m_PrefabInstance: {fileID: 570258500}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &570835792 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6678424352922488531, guid: beff538831825ec97a8bdd524f4bc0f0, type: 3}
-  m_PrefabInstance: {fileID: 469432440}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81c41dd3024af1ec2bbdea35df0e3627, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &578956719 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4030544982476679133, guid: 50b3dca135e1f6f448e3d0b1f91a4de2, type: 3}
@@ -6629,7 +6596,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 979995686}
-  - component: {fileID: 979995685}
   m_Layer: 0
   m_Name: Portals
   m_TagString: Untagged
@@ -6637,23 +6603,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &979995685
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 979995684}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 523d565cd015866f9b17833db67013eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mainScenePortals:
-  - {fileID: 570835792}
-  - {fileID: 175819937}
-  - {fileID: 87964248}
-  defaultPortalIndex: 0
 --- !u!4 &979995686
 Transform:
   m_ObjectHideFlags: 0
