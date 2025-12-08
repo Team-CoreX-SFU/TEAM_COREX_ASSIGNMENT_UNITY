@@ -63,20 +63,42 @@ public class KeyPadScript : MonoBehaviour
 
     // Internal state
     private static event Action AnyKeypadSolved; // Fired when any keypad enters correct code
+    private static event Action CloseAllDoors; // Fired when doors should be closed
     private int[] enteredCode;
     private int currentPresses = 0;
     private TMPro.TextMeshPro screenTextComponent;
     private bool isProcessing = false;
     private bool doorOpened = false;
 
+    // Store original closed angles for doors
+    private float door1ClosedYAngle;
+    private float door2ClosedYAngle;
+
     private void Awake()
     {
         AnyKeypadSolved += OpenAssignedDoors;
+        CloseAllDoors += CloseAssignedDoors;
+
+        // Store original closed angles from current door rotations
+        if (doorTransform != null)
+        {
+            door1ClosedYAngle = doorTransform.localEulerAngles.y;
+            // Normalize to -180..180
+            if (door1ClosedYAngle > 180f) door1ClosedYAngle -= 360f;
+        }
+
+        if (secondDoorTransform != null)
+        {
+            door2ClosedYAngle = secondDoorTransform.localEulerAngles.y;
+            // Normalize to -180..180
+            if (door2ClosedYAngle > 180f) door2ClosedYAngle -= 360f;
+        }
     }
 
     private void OnDestroy()
     {
         AnyKeypadSolved -= OpenAssignedDoors;
+        CloseAllDoors -= CloseAssignedDoors;
     }
 
     void Start()
@@ -251,6 +273,73 @@ public class KeyPadScript : MonoBehaviour
 
         // Snap exactly to target
         targetDoor.localEulerAngles = new Vector3(startRot.x, targetY, startRot.z);
+    }
+
+    /// <summary>
+    /// Close this keypad's assigned door(s) and return them to original state.
+    /// Called when ground breaking music triggers.
+    /// </summary>
+    private void CloseAssignedDoors()
+    {
+        if (doorTransform != null)
+        {
+            StartCoroutine(CloseDoorAnimation(doorTransform, door1ClosedYAngle));
+        }
+
+        if (secondDoorTransform != null)
+        {
+            StartCoroutine(CloseDoorAnimation(secondDoorTransform, door2ClosedYAngle));
+        }
+
+        // Reset door opened flag so doors can be opened again if needed
+        doorOpened = false;
+    }
+
+    /// <summary>
+    /// Smoothly rotates the given door's local Y back to its original closed angle.
+    /// </summary>
+    private IEnumerator CloseDoorAnimation(Transform targetDoor, float closedYAngle)
+    {
+        if (targetDoor == null)
+            yield break;
+
+        Vector3 startRot = targetDoor.localEulerAngles;
+        float startY = startRot.y;
+        float targetY = closedYAngle;
+
+        // Normalize to -180..180 for smooth interpolation
+        if (startY > 180f) startY -= 360f;
+        if (targetY > 180f) targetY -= 360f;
+
+        float elapsed = 0f;
+
+        while (elapsed < doorOpenDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / doorOpenDuration);
+
+            if (doorOpenCurve != null && doorOpenCurve.length > 0)
+            {
+                t = doorOpenCurve.Evaluate(t);
+            }
+
+            float currentY = Mathf.Lerp(startY, targetY, t);
+            targetDoor.localEulerAngles = new Vector3(startRot.x, currentY, startRot.z);
+
+            yield return null;
+        }
+
+        // Snap exactly to target
+        targetDoor.localEulerAngles = new Vector3(startRot.x, targetY, startRot.z);
+    }
+
+    /// <summary>
+    /// Public static method to close all doors (called from GroundVictoryMusicTrigger)
+    /// </summary>
+    public static void TriggerCloseAllDoors()
+    {
+        CloseAllDoors?.Invoke();
+        Debug.Log("[KeyPadScript] CloseAllDoors event triggered - all keypad doors will close");
     }
 
     /// <summary>

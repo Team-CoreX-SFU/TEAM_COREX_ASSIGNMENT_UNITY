@@ -45,6 +45,10 @@ public class GroundVictoryMusicTrigger : MonoBehaviour
         {
             audioSource.PlayOneShot(victoryMusic);
             hasPlayed = true;
+
+            // Close all doors that were opened by keypads
+            Debug.Log("[GroundVictoryMusicTrigger] Ground breaking music triggered - closing all keypad doors");
+            KeyPadScript.TriggerCloseAllDoors();
         }
         else
         {
