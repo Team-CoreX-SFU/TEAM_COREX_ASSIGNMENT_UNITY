@@ -68,7 +68,15 @@ public class VRKeypadButton : MonoBehaviour
         // Auto-find keypad script if not assigned
         if (keypadScript == null)
         {
-            keypadScript = FindObjectOfType<KeyPadScript>();
+            // Prefer a keypad on this object or any parent (works for duplicated keypads)
+            keypadScript = GetComponentInParent<KeyPadScript>();
+
+            // If still not found, fall back to first keypad in scene
+            if (keypadScript == null)
+            {
+                keypadScript = FindObjectOfType<KeyPadScript>();
+            }
+
             if (keypadScript == null)
             {
                 Debug.LogWarning($"[VRKeypadButton] KeyPadScript not found! Button {buttonNumber} will not function.");

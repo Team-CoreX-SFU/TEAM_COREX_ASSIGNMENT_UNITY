@@ -62,11 +62,22 @@ public class KeyPadScript : MonoBehaviour
     public AnimationCurve doorOpenCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
     // Internal state
+    private static event Action AnyKeypadSolved; // Fired when any keypad enters correct code
     private int[] enteredCode;
     private int currentPresses = 0;
     private TMPro.TextMeshPro screenTextComponent;
     private bool isProcessing = false;
     private bool doorOpened = false;
+
+    private void Awake()
+    {
+        AnyKeypadSolved += OpenAssignedDoors;
+    }
+
+    private void OnDestroy()
+    {
+        AnyKeypadSolved -= OpenAssignedDoors;
+    }
 
     void Start()
     {
@@ -163,22 +174,9 @@ public class KeyPadScript : MonoBehaviour
             Debug.Log("[KeyPadScript] ✓ CORRECT CODE ENTERED!");
             PlaySound(correctSound);
             OnCodeCorrect?.Invoke();
-
-            // Open door(s) if assigned
-            if (!doorOpened && (doorTransform != null || secondDoorTransform != null))
-            {
-                doorOpened = true;
-
-                if (doorTransform != null)
-                {
-                    StartCoroutine(OpenDoorAnimation(doorTransform, door1OpenYAngle));
-                }
-
-                if (secondDoorTransform != null)
-                {
-                    StartCoroutine(OpenDoorAnimation(secondDoorTransform, door2OpenYAngle));
-                }
-            }
+            // Open this keypad's doors and notify all others to open theirs
+            OpenAssignedDoors();
+            AnyKeypadSolved?.Invoke();
         }
         else
         {
@@ -193,6 +191,27 @@ public class KeyPadScript : MonoBehaviour
         }
 
         isProcessing = false;
+    }
+
+    /// <summary>
+    /// Open this keypad's assigned door(s) once. Used both locally and when any keypad is solved.
+    /// </summary>
+    private void OpenAssignedDoors()
+    {
+        if (doorOpened || (doorTransform == null && secondDoorTransform == null))
+            return;
+
+        doorOpened = true;
+
+        if (doorTransform != null)
+        {
+            StartCoroutine(OpenDoorAnimation(doorTransform, door1OpenYAngle));
+        }
+
+        if (secondDoorTransform != null)
+        {
+            StartCoroutine(OpenDoorAnimation(secondDoorTransform, door2OpenYAngle));
+        }
     }
 
     /// <summary>
