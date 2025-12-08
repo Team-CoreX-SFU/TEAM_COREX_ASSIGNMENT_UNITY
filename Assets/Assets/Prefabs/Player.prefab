@@ -79,13 +79,13 @@ MonoBehaviour:
   followSmoothing: 10
   notificationPosition: 8
   timerPosition: 4
-  notificationScreenOffset: {x: 20, y: 50}
+  notificationScreenOffset: {x: 50, y: 50}
   timerScreenOffset: {x: 20, y: 50}
   notificationSpacing: 10
   timerSpacing: 10
-  notificationSize: {x: 100, y: 20}
+  notificationSize: {x: 150, y: 20}
   timerSize: {x: 100, y: 20}
-  notificationFontSize: 8
+  notificationFontSize: 11
   timerFontSize: 10
   canvasScale: 0.002
   nonVRCanvasScale: 0.003
@@ -1776,6 +1776,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerFollowUI: {fileID: 5492974088769233694}
+  exitDoorKeypadCode: 152
+  exitDoorHiddenCharacter: 95
+  exitDoorNotificationPrefix: Exit Door Code
 --- !u!1 &8472343806611759738
 GameObject:
   m_ObjectHideFlags: 0
