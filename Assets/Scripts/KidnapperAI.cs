@@ -108,7 +108,8 @@ public class KidnapperAI : MonoBehaviour
     // True only while the kidnapper is standing at the switch and waiting to restore power.
     private bool isWaitingToRestorePower = false;
     // UI timer notification shown to the player while the kidnapper is restoring power.
-    private UINotification restoreTimerNotification;
+    // Static so all kidnapper instances share the same timer (prevents duplicate timers)
+    private static UINotification restoreTimerNotification;
 
     void Start()
     {
@@ -1377,12 +1378,23 @@ public class KidnapperAI : MonoBehaviour
     /// <summary>
     /// Show a countdown timer while the kidnapper is restoring power so the player knows
     /// how much time is left before the kidnapper returns to normal behavior.
+    /// Uses static timer reference so only one timer is shown even if multiple kidnappers are active.
     /// </summary>
     private void ShowRestoreTimer(float duration)
     {
         if (duration <= 0f) return;
 
-        // Hide any existing timer first
+        // Don't create a new timer if one already exists and is still active
+        if (restoreTimerNotification != null)
+        {
+            // Check if the timer object still exists and hasn't been destroyed
+            if (restoreTimerNotification.gameObject != null && restoreTimerNotification.GetRemainingTime() > 0f)
+            {
+                return; // Timer already exists and is still counting down
+            }
+        }
+
+        // Hide any existing timer first (in case it's invalid)
         HideRestoreTimer();
 
         restoreTimerNotification = PlayerFollowUIManager.ShowTimer(
@@ -1397,6 +1409,7 @@ public class KidnapperAI : MonoBehaviour
 
     /// <summary>
     /// Hide the restore timer notification, if any.
+    /// Uses static timer reference so all kidnapper instances can hide the shared timer.
     /// </summary>
     private void HideRestoreTimer()
     {

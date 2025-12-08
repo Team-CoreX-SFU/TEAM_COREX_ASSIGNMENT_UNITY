@@ -10,42 +10,42 @@ public class PowerSupplySwitchController : MonoBehaviour
     [Header("Switch Settings")]
     [Tooltip("The Transform of the switch object to rotate (if null, uses this GameObject's transform)")]
     public Transform switchTransform;
-    
+
     [Header("Animation Settings")]
     [Tooltip("Starting Z rotation angle (ON position)")]
     public float onAngle = -90f;
-    
+
     [Tooltip("Ending Z rotation angle (OFF position)")]
     public float offAngle = 0f;
-    
+
     [Tooltip("Duration of the switch animation in seconds")]
     public float animationDuration = 0.8f;
-    
+
     [Tooltip("Animation curve for smooth switching (optional)")]
     public AnimationCurve animationCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
-    
+
     [Header("Interaction Settings")]
     [Tooltip("Can be toggled via XR interaction or trigger zone")]
     public bool canInteract = true;
-    
+
     [Header("Audio (Optional)")]
     public AudioSource audioSource;
     public AudioClip switchOffSound;
     public AudioClip switchOnSound;
-    
+
     [Header("Light Control")]
     [Tooltip("Delay in seconds before turning off lights after switch is turned off")]
     public float cutElectricDelay = 0.5f;
-    
+
     [Tooltip("Lights to turn off when switch is turned off")]
     public Light[] lightsToTurnOff;
-    
+
     [Tooltip("GameObjects with Light components to turn off (searches for Light component)")]
     public GameObject[] lightObjectsToTurnOff;
-    
+
     [Tooltip("Search for Light components in children of light objects")]
     public bool searchChildrenForLights = true;
-    
+
     [Header("Kidnapper Interaction")]
     [Tooltip("How long the kidnapper waits at the switch before turning power back on (in seconds).")]
     public float powerRestoreDelay = 300f; // 5 minutes default, configurable in Inspector
@@ -58,7 +58,7 @@ public class PowerSupplySwitchController : MonoBehaviour
     private bool isAnimating = false;
     private Coroutine animationCoroutine;
     private UINotification delayTimer; // Timer UI for cut electric delay
-    
+
     void Awake()
     {
         // If no switch transform assigned, use this GameObject's transform
@@ -66,19 +66,19 @@ public class PowerSupplySwitchController : MonoBehaviour
         {
             switchTransform = transform;
         }
-        
+
         // Set initial rotation to ON position
         Vector3 currentRotation = switchTransform.localEulerAngles;
         switchTransform.localEulerAngles = new Vector3(currentRotation.x, currentRotation.y, onAngle);
     }
-    
+
     /// <summary>
     /// Toggles the switch state.
     /// </summary>
     public void ToggleSwitch()
     {
         if (!canInteract || isAnimating) return;
-        
+
         if (isOn)
         {
             TurnOff();
@@ -88,24 +88,25 @@ public class PowerSupplySwitchController : MonoBehaviour
             TurnOn();
         }
     }
-    
+
     /// <summary>
     /// Turns the switch OFF (Z rotation from -90 to 0).
     /// </summary>
     public void TurnOff()
     {
+        // Prevent multiple calls - if already off or animating, don't do anything
         if (!isOn || isAnimating) return;
-        
+
         StartCoroutine(AnimateSwitch(offAngle));
-        
+
         // Play sound if available
         if (audioSource != null && switchOffSound != null)
         {
             audioSource.PlayOneShot(switchOffSound);
         }
-        
-        // Show countdown timer for cut electric delay
-        if (cutElectricDelay > 0f)
+
+        // Show countdown timer for cut electric delay (only once)
+        if (cutElectricDelay > 0f && (delayTimer == null || delayTimer.GetRemainingTime() <= 0f))
         {
             ShowDelayTimer();
         }
@@ -113,65 +114,65 @@ public class PowerSupplySwitchController : MonoBehaviour
         // Turn off lights after delay (and later notify kidnappers from inside that coroutine)
         StartCoroutine(TurnOffLightsWithDelay());
     }
-    
+
     /// <summary>
     /// Turns the switch ON (Z rotation from 0 to -90).
     /// </summary>
     public void TurnOn()
     {
         if (isOn || isAnimating) return;
-        
+
         StartCoroutine(AnimateSwitch(onAngle));
-        
+
         // Play sound if available
         if (audioSource != null && switchOnSound != null)
         {
             audioSource.PlayOneShot(switchOnSound);
         }
-        
+
         // Hide timer if switch is turned back on
         HideDelayTimer();
-        
+
         // Turn on lights (if switch can be turned back on)
         TurnOnLights();
     }
-    
+
     private IEnumerator AnimateSwitch(float targetAngle)
     {
         isAnimating = true;
-        
+
         Vector3 startRotation = switchTransform.localEulerAngles;
         float startAngle = startRotation.z;
         float elapsed = 0f;
-        
+
         // Normalize angles to -180 to 180 range for proper interpolation
         if (startAngle > 180f) startAngle -= 360f;
         if (targetAngle > 180f) targetAngle -= 360f;
-        
+
         while (elapsed < animationDuration)
         {
             elapsed += Time.deltaTime;
             float t = elapsed / animationDuration;
-            
+
             // Apply animation curve if available
             if (animationCurve != null && animationCurve.length > 0)
             {
                 t = animationCurve.Evaluate(t);
             }
-            
+
             float currentAngle = Mathf.Lerp(startAngle, targetAngle, t);
             switchTransform.localEulerAngles = new Vector3(startRotation.x, startRotation.y, currentAngle);
-            
+
             yield return null;
         }
-        
+
         // Ensure final rotation is exact
         switchTransform.localEulerAngles = new Vector3(startRotation.x, startRotation.y, targetAngle);
-        
+
         isOn = (targetAngle == onAngle);
         isAnimating = false;
     }
-    
+
     /// <summary>
     /// Check if switch is currently ON.
     /// </summary>
@@ -179,7 +180,7 @@ public class PowerSupplySwitchController : MonoBehaviour
     {
         return isOn;
     }
-    
+
     /// <summary>
     /// Check if switch is currently OFF.
     /// </summary>
@@ -187,7 +188,7 @@ public class PowerSupplySwitchController : MonoBehaviour
     {
         return !isOn;
     }
-    
+
     /// <summary>
     /// Coroutine to turn off lights after a delay.
     /// </summary>
@@ -196,16 +197,16 @@ public class PowerSupplySwitchController : MonoBehaviour
         // Wait for the delay before cutting electric (timer will countdown during this)
         // Ensure we always wait at least a tiny bit to avoid immediate execution
         float delay = Mathf.Max(0.1f, cutElectricDelay);
-        
+
         Debug.Log($"PowerSupplySwitchController: Waiting {delay} seconds before cutting electric...");
-        
+
         yield return new WaitForSeconds(delay);
-        
+
         Debug.Log("PowerSupplySwitchController: Delay complete, turning off lights now.");
-        
+
         // Hide timer when delay is complete
         HideDelayTimer();
-        
+
         // Turn off all lights
         TurnOffLights();
 
@@ -221,24 +222,34 @@ public class PowerSupplySwitchController : MonoBehaviour
             }
         }
     }
-    
+
     /// <summary>
     /// Show countdown timer for cut electric delay
     /// </summary>
     private void ShowDelayTimer()
     {
         if (cutElectricDelay <= 0f) return;
-        
-        // Hide existing timer if any
+
+        // Don't create a new timer if one already exists and is still active
+        if (delayTimer != null)
+        {
+            // Check if the timer object still exists and hasn't been destroyed
+            if (delayTimer.gameObject != null && delayTimer.GetRemainingTime() > 0f)
+            {
+                return; // Timer already exists and is still counting down
+            }
+        }
+
+        // Hide existing timer if any (in case it's invalid)
         HideDelayTimer();
-        
+
         // Show new countdown timer
         delayTimer = PlayerFollowUIManager.ShowTimer("Power cutting in", cutElectricDelay, () => {
             // Timer complete callback - lights should turn off now
             delayTimer = null;
         });
     }
-    
+
     /// <summary>
     /// Hide the delay timer
     /// </summary>
@@ -250,7 +261,7 @@ public class PowerSupplySwitchController : MonoBehaviour
             delayTimer = null;
         }
     }
-    
+
     /// <summary>
     /// Turns off all assigned lights.
     /// </summary>
@@ -267,21 +278,21 @@ public class PowerSupplySwitchController : MonoBehaviour
                 }
             }
         }
-        
+
         // Turn off lights from GameObject array
         if (lightObjectsToTurnOff != null)
         {
             foreach (GameObject lightObj in lightObjectsToTurnOff)
             {
                 if (lightObj == null) continue;
-                
+
                 // Try to get Light component on the GameObject itself
                 Light light = lightObj.GetComponent<Light>();
                 if (light != null)
                 {
                     light.enabled = false;
                 }
-                
+
                 // If searchChildrenForLights is enabled, search in children
                 if (searchChildrenForLights)
                 {
@@ -297,7 +308,7 @@ public class PowerSupplySwitchController : MonoBehaviour
             }
         }
     }
-    
+
     /// <summary>
     /// Turns on all assigned lights (useful if switch can be turned back on).
     /// </summary>
@@ -314,21 +325,21 @@ public class PowerSupplySwitchController : MonoBehaviour
                 }
             }
         }
-        
+
         // Turn on lights from GameObject array
         if (lightObjectsToTurnOff != null)
         {
             foreach (GameObject lightObj in lightObjectsToTurnOff)
             {
                 if (lightObj == null) continue;
-                
+
                 // Try to get Light component on the GameObject itself
                 Light light = lightObj.GetComponent<Light>();
                 if (light != null)
                 {
                     light.enabled = true;
                 }
-                
+
                 // If searchChildrenForLights is enabled, search in children
                 if (searchChildrenForLights)
                 {
