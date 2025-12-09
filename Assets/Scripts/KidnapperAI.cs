@@ -1420,6 +1420,19 @@ public class KidnapperAI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Public static method to hide the kidnapper timer from anywhere (e.g., when victory music plays)
+    /// </summary>
+    public static void HideKidnapperTimer()
+    {
+        if (restoreTimerNotification != null)
+        {
+            Debug.Log("[KidnapperAI] Hiding kidnapper timer notification");
+            restoreTimerNotification.Hide();
+            restoreTimerNotification = null;
+        }
+    }
+
     void UpdateAnimations()
     {
         if (animator == null) return;

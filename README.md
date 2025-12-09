@@ -23,5 +23,3 @@ Escape from the abandoned building-an immersive experience where the player, kid
 ### Prerequisites
 - Unity Editor (Version specified in `ProjectSettings/ProjectVersion.txt`)
 - Git for version control
-
-

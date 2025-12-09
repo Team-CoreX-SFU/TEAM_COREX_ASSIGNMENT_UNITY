@@ -35,25 +35,47 @@ public class GroundVictoryMusicTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log($"[GroundVictoryMusicTrigger] OnTriggerEnter called on '{gameObject.name}' by '{other.gameObject.name}' (Tag: {other.tag})");
+
         if (playOnce && hasPlayed)
+        {
+            Debug.Log($"[GroundVictoryMusicTrigger] Already played once, ignoring trigger");
             return;
+        }
 
         if (!IsPlayer(other))
+        {
+            Debug.Log($"[GroundVictoryMusicTrigger] Collider '{other.gameObject.name}' is not the player (tag: {other.tag}, expected: {playerTag})");
             return;
-
-        if (audioSource != null && victoryMusic != null)
-        {
-            audioSource.PlayOneShot(victoryMusic);
-            hasPlayed = true;
-
-            // Close all doors that were opened by keypads
-            Debug.Log("[GroundVictoryMusicTrigger] Ground breaking music triggered - closing all keypad doors");
-            KeyPadScript.TriggerCloseAllDoors();
         }
-        else
+
+        Debug.Log($"[GroundVictoryMusicTrigger] Player detected! Checking audio setup...");
+
+        if (audioSource == null)
         {
-            Debug.LogWarning("[GroundVictoryMusicTrigger] Missing AudioSource or VictoryMusic clip.");
+            Debug.LogError($"[GroundVictoryMusicTrigger] AudioSource is NULL! Please assign an AudioSource component.");
+            return;
         }
+
+        if (victoryMusic == null)
+        {
+            Debug.LogError($"[GroundVictoryMusicTrigger] VictoryMusic clip is NULL! Please assign an AudioClip.");
+            return;
+        }
+
+        // All checks passed - play music
+        Debug.Log($"[GroundVictoryMusicTrigger] Playing victory music '{victoryMusic.name}' on '{gameObject.name}'");
+        audioSource.PlayOneShot(victoryMusic);
+        hasPlayed = true;
+
+        // Close all doors that were opened by keypads
+        // This works for ANY victory ground trigger - dynamic, not hardcoded
+        Debug.Log($"[GroundVictoryMusicTrigger] Ground breaking music triggered on '{gameObject.name}' - closing all keypad doors");
+        KeyPadScript.TriggerCloseAllDoors();
+
+        // Hide the "time left to run from kidnapper" timer UI
+        Debug.Log($"[GroundVictoryMusicTrigger] Hiding kidnapper timer UI");
+        KidnapperAI.HideKidnapperTimer();
     }
 
     /// <summary>
