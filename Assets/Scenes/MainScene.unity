@@ -1758,6 +1758,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: -5536819435064228295, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -30.918081
+      objectReference: {fileID: 0}
+    - target: {fileID: -5536819435064228295, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -21.529926
+      objectReference: {fileID: 0}
     - target: {fileID: -5499960881714433618, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
       propertyPath: m_Name
       value: p.042(screwdriver_stored)
@@ -2154,6 +2162,14 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[1]
       value: 
       objectReference: {fileID: 2100000, guid: d40889b5b95634ee396ad041dee61911, type: 2}
+    - target: {fileID: 8045587944205776593, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -11.89
+      objectReference: {fileID: 0}
+    - target: {fileID: 8045587944205776593, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -12.58
+      objectReference: {fileID: 0}
     - target: {fileID: 8131969697023625363, guid: 8efbf7151b1e05a43ac32cbee0acb2fc, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.7035902
@@ -12490,7 +12506,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 909e0df3b4ddb412d884d65e7ecafba6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pinValue: 2
+  pinValue: 5
   requireFlashlightOn: 1
 --- !u!65 &1736962083
 BoxCollider:
@@ -13590,7 +13606,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 909e0df3b4ddb412d884d65e7ecafba6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pinValue: 5
+  pinValue: 2
   requireFlashlightOn: 1
 --- !u!65 &1993017724
 BoxCollider:
