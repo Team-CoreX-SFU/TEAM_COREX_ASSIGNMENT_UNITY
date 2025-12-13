@@ -10315,7 +10315,8 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1817018533866169856, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_text
-      value: Find the fuse box.
+      value: Find the Screwdriver First. Then Find the Fuse Box. The Screwdriver
+        is needed to open the Fuse Box.
       objectReference: {fileID: 0}
     - target: {fileID: 4204705147963655109, guid: d2d15b805396048f29a74f3b0b9c4de7, type: 3}
       propertyPath: m_LocalPosition.x
